@@ -19,6 +19,22 @@ my $set = $cal->retrieve({
 print $set->count ." items\n";
 
 while ($set->has_next) {
-    print $set->next->Subject, "\n";
+    my $item = $set->next;
+    print $item->Start->iso8601, "\n";
+    print $item->End->iso8601, "\n";
+    print $item->Subject, "\n";
+    print $item->Location, "\n" if $item->has_Location;
+    print $item->Type, "\n";
+    print $item->CalendarItemType, "\n";
+    print $item->Sensitivity, "\n";
+    print join ',', @{$item->DisplayTo}, "\n" if $item->has_DisplayTo;
+    print $item->Organizer, "\n";
+    print $item->IsCancelled, "\n";
+    print $item->AppointmentState, "\n";
+    print $item->Status, "\n";
+    print $item->LegacyFreeBusyStatus, "\n";
+    print $item->IsDraft, "\n";
+    print $item->IsAllDayEvent, "\n";
+    print "\n";
 }
 

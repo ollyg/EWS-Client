@@ -188,10 +188,15 @@ item.
 
 Represents the subject of a calendar item.
 
-=head2 $item->Location
+=head2 $item->Location (optional)
 
 Friendly name for where a calendar item pertains to (e.g., a physical address
 or "My Office").
+
+=head2 $item->has_Location
+
+Will return true if the event item had a Location property set, meaning there
+is a defined value in C<< $item->Location >>, otherwise returns false.
 
 =head2 $item->Type
 
@@ -230,12 +235,18 @@ your user sees. Will be a string and one of the following four values, only:
 
 =back
 
-=head2 $item->DisplayTo
+=head2 $item->DisplayTo (optional)
 
 When a client creates a calendar entry, there can be other people invited to
 the event (usually via the To: box in Outlook, or similar). This property
 contains an array ref of the display names ("Firstname Lastname") or the
 parties invited to the event.
+
+=head2 $item->has_DisplayTo
+
+Will return true if there are entries in the C<< $item->DisplayTo >> property,
+in other words there were invitees on this event, otherwise returns false.
+Actually returns the number of entries in that list, which may be useful.
 
 =head2 $item->Organizer
 

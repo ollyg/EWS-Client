@@ -27,7 +27,7 @@ has Location => (
     is => 'ro',
     isa => 'Str',
     required => 0,
-    default => '',
+    predicate => 'has_Location',
 );
 
 has CalendarItemType => (
@@ -49,6 +49,10 @@ has DisplayTo => (
     isa => 'ArrayRef[Str]',
     required => 1,
 );
+
+sub has_DisplayTo {
+    return scalar @{(shift)->DisplayTo};
+}
 
 has Organizer => (
     is => 'ro',
