@@ -1,7 +1,7 @@
 package EWS::Calendar::Read;
 use Moose;
 
-with 'EWS::Calendar::Role::RunFindItemQuery';
+with 'EWS::Calendar::Role::DoRetrieveWithQuery';
 use EWS::Calendar::Query;
 
 our $VERSION = '0.01';
@@ -28,7 +28,7 @@ has server => (
 sub retrieve {
     my $self = shift;
     my $query = EWS::Calendar::Query->new(@_);
-    return $self->run($query);
+    return $self->_retrieve($query);
 }
 
 __PACKAGE__->meta->make_immutable;

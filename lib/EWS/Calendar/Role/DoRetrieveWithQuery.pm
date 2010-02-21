@@ -9,11 +9,63 @@ with qw/
 use EWS::Calendar::ResultSet;
 use Carp;
 
-sub run {
+sub _list_messages {
+    my ($self, $kind, $response) = @_;
+    return @{ $response->{"${kind}Result"}
+                       ->{ResponseMessages}
+                       ->{cho_CreateItemResponseMessage} };
+}
+
+sub _check_for_errors {
+    my ($self, $kind, $response) = @_;
+
+    foreach my $msg ( $self->_list_messages($kind, $response) ) {
+        carp "Fault returned from Exchange Server."
+            if $msg->{"${kind}ResponseMessage"}->{ResponseCode} ne 'NoError';
+    }
+}
+
+sub _list_calendaritems {
+    my ($self, $kind, $response) = @_;
+
+    return map { $_->{CalendarItem} }
+           map { @{ $_->{Items}->{cho_Item} } }
+           map { exists $_->{RootFolder} ? $_->{RootFolder} : $_ } 
+           map { $_->{"${kind}ResponseMessage"} }
+               $self->_list_messages($kind, $response);
+}
+
+# Find list of items within the view, then Get details for each one
+# (item:Body is only available this way, it's not returned by FindItem)
+sub _retrieve {
     my ($self, $query) = @_;
 
-    my $response = scalar $self->FindItem->(
+    my $find_response = scalar $self->FindItem->(
         Traversal => 'Shallow',
+        ItemShape => {
+            BaseShape => 'IdOnly',
+        },
+        ParentFolderIds => {
+            cho_FolderId => [
+                {
+                    DistinguishedFolderId => {
+                        Id => "calendar",
+                    },
+                },
+            ],
+        },
+        CalendarView => {
+            StartDate => $query->start->iso8601,
+            EndDate   => $query->end->iso8601,
+        },
+    );
+
+    $self->_check_for_errors('FindItem', $find_response);
+
+    my @ids = map { $_->{ItemId}->{Id} }
+                  $self->_list_calendaritems('FindItem', $find_response);
+
+    my $get_response = scalar $self->GetItem->(
         ItemShape => {
             BaseShape => 'IdOnly',
             AdditionalProperties => {
@@ -35,41 +87,24 @@ sub run {
                         calendar:IsAllDayEvent
                         calendar:LegacyFreeBusyStatus
                         item:IsDraft
+                        item:Body
                     /,
                 ],
             },
         },
-        ParentFolderIds => {
-            cho_FolderId => [
-                {
-                    DistinguishedFolderId => {
-                        Id => "calendar",
-                    },
-                },
+        ItemIds => {
+            cho_ItemId => [
+                map {{
+                    ItemId => { Id => $_ },
+                }} @ids
             ],
-        },
-        CalendarView => {
-            StartDate => $query->start->iso8601,
-            EndDate   => $query->end->iso8601,
         },
     );
 
-    carp "Fault returned from Exchange Server."
-        if $response->{FindItemResult}
-                    ->{ResponseMessages}
-                    ->{cho_CreateItemResponseMessage}->[0]
-                    ->{FindItemResponseMessage}
-                    ->{ResponseCode}
-                          ne 'NoError';
+    $self->_check_for_errors('GetItem', $get_response);
 
     return EWS::Calendar::ResultSet->new({
-        items => [ map { $_->{CalendarItem} } @{ $response->{FindItemResult}
-                                                          ->{ResponseMessages}
-                                                          ->{cho_CreateItemResponseMessage}->[0]
-                                                          ->{FindItemResponseMessage}
-                                                          ->{RootFolder}
-                                                          ->{Items}
-                                                          ->{cho_Item} } ],
+        items => [ $self->_list_calendaritems('GetItem', $get_response) ]
     });
 }
 

@@ -23,12 +23,23 @@ has Subject => (
     required => 1,
 );
 
+has Body => (
+    is => 'ro',
+    isa => 'Str',
+    required => 0,
+    default => '',
+);
+
+sub has_Body { return length ((shift)->Body) }
+
 has Location => (
     is => 'ro',
     isa => 'Str',
     required => 0,
-    predicate => 'has_Location',
+    default => '',
 );
+
+sub has_Location { return length ((shift)->Location) }
 
 has CalendarItemType => (
     is => 'ro',
@@ -63,8 +74,13 @@ has Organizer => (
 has IsCancelled => (
     is => 'ro',
     isa => 'Int', # bool
-    required => 1,
+    lazy_build => 1,
 );
+
+sub _build_IsCancelled {
+    my $self = shift;
+    return ($self->AppointmentState & 0x0004);
+}
 
 has AppointmentState => (
     is => 'ro',
@@ -99,10 +115,10 @@ sub BUILDARGS {
 
     $params->{'Start'} = DateTime::Format::ISO8601->parse_datetime($params->{'Start'});
     $params->{'End'}   = DateTime::Format::ISO8601->parse_datetime($params->{'End'});
-    $params->{'Organizer'}   = $params->{'Organizer'}->{'Mailbox'}->{'Name'};
-    $params->{'IsCancelled'} = ($params->{'AppointmentState'} & 0x0004);
-    $params->{'DisplayTo'}   = [ grep {$_ ne $params->{'Organizer'}}
-                                      split m/; /, $params->{'DisplayTo'} ];
+    $params->{'Body'}  = $params->{'Body'}->{'_'};
+    $params->{'Organizer'} = $params->{'Organizer'}->{'Mailbox'}->{'Name'};
+    $params->{'DisplayTo'} = [ grep {$_ ne $params->{'Organizer'}}
+                                    split m/; /, $params->{'DisplayTo'} ];
     return $params;
 }
 
