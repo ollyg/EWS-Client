@@ -1,4 +1,4 @@
-package EWS::Calendar::Role::Retrieve;
+package EWS::Calendar::Role::DoRetrieveWithQuery;
 use Moose::Role;
 
 with qw/
