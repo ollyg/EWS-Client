@@ -1,15 +1,17 @@
 package EWS::Calendar::Query;
 use Moose;
 
+use DateTime;
+
 has start => (
     is => 'ro',
-    isa => 'Str',
+    isa => 'DateTime',
     required => 1,
 );
 
 has end => (
     is => 'ro',
-    isa => 'Str',
+    isa => 'DateTime',
     required => 1,
 );
 

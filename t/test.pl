@@ -2,6 +2,7 @@
 
 use lib 'lib';
 use EWS::Calendar::Read;
+use DateTime::Format::ISO8601;
 
 my $cal = EWS::Calendar::Read->new({
     schema_path => 'share',
@@ -11,8 +12,8 @@ my $cal = EWS::Calendar::Read->new({
 });
 
 my $set = $cal->view({
-    start => '2010-02-15T00:00:00Z',
-    end   => '2010-02-22T00:00:00Z',
+    start => DateTime::Format::ISO8601->parse_datetime('2010-02-15T00:00:00Z'),
+    end   => DateTime::Format::ISO8601->parse_datetime('2010-02-22T00:00:00Z'),
 });
 
 print $set->count ." items\n";

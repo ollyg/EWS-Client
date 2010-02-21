@@ -45,8 +45,8 @@ sub run {
             ],
         },
         CalendarView => {
-            StartDate => $query->start,
-            EndDate   => $query->end,
+            StartDate => $query->start->iso8601,
+            EndDate   => $query->end->iso8601,
         },
     );
 
