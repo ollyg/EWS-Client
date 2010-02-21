@@ -6,7 +6,7 @@ use EWS::Calendar::Item;
 
 has items => (
     is => 'ro',
-    isa => 'ArrayRef',
+    isa => 'ArrayRef[EWS::Calendar::Item]',
     required => 1,
 );
 
@@ -25,10 +25,22 @@ sub count {
     return scalar @{$self->items};
 }
 
-has iter => (
-    metaclass => 'Iterable',
-    iterate_over => 'items',
+has iterator => (
+    is => 'ro',
+    isa => 'MooseX::Iterator::Array',
+    handles => [qw/
+        next
+        has_next
+        peek
+        reset
+    /],
+    lazy_build => 1,
 );
+
+sub _build_iterator {
+    my $self = shift;
+    return MooseX::Iterator::Array->new( collection => $self->items );
+}
 
 __PACKAGE__->meta->make_immutable;
 no Moose;

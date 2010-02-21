@@ -11,15 +11,14 @@ my $cal = EWS::Calendar::Read->new({
     server => 'nexus.ox.ac.uk',
 });
 
-my $set = $cal->view({
+my $set = $cal->retrieve({
     start => DateTime::Format::ISO8601->parse_datetime('2010-02-15T00:00:00Z'),
     end   => DateTime::Format::ISO8601->parse_datetime('2010-02-22T00:00:00Z'),
 });
 
 print $set->count ." items\n";
 
-my $iter = $set->iter;
-while ($iter->has_next) {
-    print $iter->next->Subject, "\n";
+while ($set->has_next) {
+    print $set->next->Subject, "\n";
 }
 
