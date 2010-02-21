@@ -38,6 +38,8 @@ has CalendarItemType => (
 
 sub Type { (shift)->CalendarItemType }
 
+sub IsRecurring { return ((shift)->Type ne 'Single') }
+
 has Sensitivity => (
     is => 'ro',
     isa => enum([qw/Normal Personal Private Confidential/]),
@@ -50,9 +52,7 @@ has DisplayTo => (
     required => 1,
 );
 
-sub has_DisplayTo {
-    return scalar @{(shift)->DisplayTo};
-}
+sub has_DisplayTo { return scalar @{(shift)->DisplayTo} }
 
 has Organizer => (
     is => 'ro',

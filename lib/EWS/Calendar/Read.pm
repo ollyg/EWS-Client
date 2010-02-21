@@ -218,6 +218,11 @@ This will be a string value of one of the following, only:
 This is an alias (the native name, in fact) for the C<< $item->Type >>
 property.
 
+=head2 $item->IsRecurring
+
+True if the event is of Type Occurrence or Exception, which means that it is
+a recurring event, otherwise returns false.
+
 =head2 $item->Sensitivity
 
 Indicates the sensitivity of the item, which can be used to filter information

@@ -24,6 +24,7 @@ while ($set->has_next) {
     print $item->End->iso8601, "\n";
     print $item->Subject, "\n";
     print $item->Location, "\n" if $item->has_Location;
+    print $item->IsRecurring, "\n";
     print $item->Type, "\n";
     print $item->CalendarItemType, "\n";
     print $item->Sensitivity, "\n";
