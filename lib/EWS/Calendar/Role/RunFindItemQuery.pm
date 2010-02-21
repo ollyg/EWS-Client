@@ -1,4 +1,4 @@
-package EWS::Calendar::Role::Process;
+package EWS::Calendar::Role::RunFindItemQuery;
 use Moose::Role;
 
 with 'EWS::Calendar::Role::FindItem';
