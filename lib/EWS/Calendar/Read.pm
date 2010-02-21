@@ -188,6 +188,16 @@ item.
 
 Represents the subject of a calendar item.
 
+=head2 $item->Body (optional)
+
+Text attachment to the calendar entry which the user may have entered content
+into.
+
+=head2 $item->has_Body
+
+Will return true if the event item has content in its Body property, otherwise
+returns false. Actually returns the length of the Body text content.
+
 =head2 $item->Location (optional)
 
 Friendly name for where a calendar item pertains to (e.g., a physical address
@@ -195,8 +205,9 @@ or "My Office").
 
 =head2 $item->has_Location
 
-Will return true if the event item had a Location property set, meaning there
-is a defined value in C<< $item->Location >>, otherwise returns false.
+Will return true if the event item has content in its Location property,
+otherwise returns false. Actually returns the length of the Location text
+content.
 
 =head2 $item->Type
 
