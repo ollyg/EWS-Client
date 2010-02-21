@@ -8,7 +8,7 @@ use Carp;
 sub run {
     my ($self, $query) = @_;
 
-    my $response = scalar $self->FindItem(
+    my $response = scalar $self->FindItem->(
         Traversal => 'Shallow',
         ItemShape => {
             BaseShape => 'IdOnly',
@@ -59,13 +59,13 @@ sub run {
                           ne 'NoError';
 
     return EWS::Calendar::ResultSet->new({
-        items => [ map { $_->{CalendarItem} } $response->{FindItemResult}
-                                                       ->{ResponseMessages}
-                                                       ->{cho_CreateItemResponseMessage}->[0]
-                                                       ->{FindItemResponseMessage}
-                                                       ->{RootFolder}
-                                                       ->{Items}
-                                                       ->{cho_Item}->[0] ],
+        items => [ map { $_->{CalendarItem} } @{ $response->{FindItemResult}
+                                                          ->{ResponseMessages}
+                                                          ->{cho_CreateItemResponseMessage}->[0]
+                                                          ->{FindItemResponseMessage}
+                                                          ->{RootFolder}
+                                                          ->{Items}
+                                                          ->{cho_Item} } ],
     });
 }
 

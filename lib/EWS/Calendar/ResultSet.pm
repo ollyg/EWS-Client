@@ -11,14 +11,15 @@ has items => (
 );
 
 sub BUILDARGS {
-    my ($class, %params) = @_;
+    my ($class, @params) = @_;
+    my $items = (scalar @params == 1 ? $params[0]->{items} : $params[1]);
     # promote hashes returned from Exchange into Item objects
-    $params{items} = [ map { EWS::Calendar::Item->new($_) } @{$params{items}} ];
-    return \%params;
+    $items = [ map { EWS::Calendar::Item->new($_) } @{$items} ];
+    return {items => $items};
 }
 
 sub count {
-    my $self;
+    my $self = shift;
     return scalar @{$self->items};
 }
 
