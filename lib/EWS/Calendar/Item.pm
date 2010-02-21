@@ -4,6 +4,7 @@ use Moose;
 use Moose::Util::TypeConstraints;
 use DateTime::Format::ISO8601;
 use DateTime;
+use Encode;
 
 has Start => (
     is => 'ro',
@@ -119,6 +120,12 @@ sub BUILDARGS {
     $params->{'Organizer'} = $params->{'Organizer'}->{'Mailbox'}->{'Name'};
     $params->{'DisplayTo'} = [ grep {$_ ne $params->{'Organizer'}}
                                     split m/; /, $params->{'DisplayTo'} ];
+
+    foreach my $key (keys %$params) {
+        next if ref $params->{$key};
+        $params->{$key} = Encode::encode("utf8", $params->{$key});
+    }
+
     return $params;
 }
 
