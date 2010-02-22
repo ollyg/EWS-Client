@@ -1,3 +1,9 @@
+libews-client-perl (0.02) karmic; urgency=low
+
+  * Add File::ShareDir dependency.
+
+ -- Oliver Gorwits <oliver.gorwits@oucs.ox.ac.uk>  Mon, 22 Feb 2010 21:43:19 +0000
+
 libews-client-perl (0.01) UNRELEASED; urgency=low
 
   * Initial release on an unsuspecting world.

@@ -9,7 +9,7 @@ with qw/
 use EWS::Client::Calendar;
 use URI::Escape ();
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 $VERSION = eval $VERSION; # numify for warning-free dev releases
 
 has username => (
@@ -68,7 +68,7 @@ EWS::Client - Microsoft Exchange Web Services Client
 
 =head1 VERSION
 
-This document refers to version 0.01 of EWS::Client
+This document refers to version 0.02 of EWS::Client
 
 =head1 SYNOPSIS
 

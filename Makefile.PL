@@ -10,6 +10,7 @@ requires       'DateTime'  => '0';
 requires       'DateTime::Format::ISO8601'  => '0';
 requires       'HTML::Strip'  => '0';
 requires       'URI::Escape'  => '0';
+requires       'File::ShareDir'  => '0';
 
 install_share;
 
