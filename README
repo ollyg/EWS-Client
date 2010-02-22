@@ -1,0 +1,105 @@
+NAME
+    EWS::Client - Microsoft Exchange Web Services Client
+
+VERSION
+    This document refers to version 0.01 of EWS::Client
+
+SYNOPSIS
+    Set up your Exchange Web Services client:
+
+     use EWS::Client;
+     use DateTime;
+     
+ my $ews = EWS::Client->new({
+         server      => 'exchangeserver.example.com',
+         username    => 'oliver',
+         password    => 's3krit', # or set in $ENV{EWS_PASS}
+     });
+
+    Then perform operations on the Exchange server:
+
+     my $entries = $ews->calendar->retrieve({
+         start => DateTime->now(),
+         end   => DateTime->now->add( month => 1 ),
+     });
+     
+ print "I retrieved ". $entries->count ." items\n";
+     
+ while ($entries->has_next) {
+         print $entries->next->Subject, "\n";
+     }
+
+DESCRIPTION
+    This module acts as a client to the Microsoft Exchange Web Services API.
+    From here you can access calendar (and soon, contact) entries in a
+    nicely abstracted fashion. Query results are generally available in an
+    iterator and convenience methods exist to access the properties of each
+    entry.
+
+METHODS
+  CONSTRUCTOR
+  EWS::Client->new( \%arguments )
+    Instantiates a new EWS client. There won't be any connection to the
+    server until you call one of the calendar or contacts retrieval methods.
+
+    "server" => Fully Qualified Domain Name (required)
+        The host name of the Exchange server to which the module should
+        connect.
+
+    "username" => String (required)
+        The account username under which the module will connect to
+        Exchange. This value will be URI encoded by the module.
+
+    "password" => String OR via $ENV{EWS_PASS} (required)
+        The password of the account under which the module will connect to
+        Exchange. This value will be URI encoded by the module. You can also
+        provide the password via the "EWS_PASS" environment variable.
+
+    "schema_path" => String (optional)
+        A folder on your file system which contains the WSDL and two further
+        Schema files (messages, and types) which describe the Exchange 2007
+        Web Services SOAP API. They are shipped with this module so your
+        providing this is optional.
+
+  COMPONENT METHODS
+    There exist separate components to access the calendar (and soon,
+    contacts) entries on the Exchange server, each bundled with this module
+    but having its own manual page. Each component is accessed through a
+    method and follow the links below to learn about the available features.
+
+  $ews->calendar()
+    Retrieves the EWS::Client::Calendar object which allows search and
+    retrieval of calendar entries.
+
+TODO
+    I might look at moving away from XML::Compile::SOAP, which is truely the
+    most awesome of modules, but overkill for ths very small set of static
+    calls.
+
+    There is currently no handling of time zone information whatsoever. I'm
+    waiting for my timezone to shift to UTC+1 in March before working on
+    this, as I don't really want to read the Exchange API docs. Patches are
+    welcome if you want to help out.
+
+REQUIREMENTS
+    *   Moose
+
+    *   XML::Compile::SOAP
+
+    *   DateTime
+
+    *   DateTime::Format::ISO8601
+
+    *   HTML::Strip
+
+    *   URI::Escape
+
+AUTHOR
+    Oliver Gorwits "<oliver.gorwits@oucs.ox.ac.uk>"
+
+COPYRIGHT & LICENSE
+    Copyright (c) Oliver Gorwits 2010.
+
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+

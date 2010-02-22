@@ -1,11 +1,6 @@
-package EWS::Calendar::Role::DoRetrieveWithQuery;
+package EWS::Calendar::Role::RetrieveWithinWindow;
 use Moose::Role;
 
-with qw/
-    EWS::Calendar::Role::SOAPClient
-    EWS::Calendar::Role::GetItem
-    EWS::Calendar::Role::FindItem
-/;
 use EWS::Calendar::ResultSet;
 use Carp;
 
@@ -20,8 +15,9 @@ sub _check_for_errors {
     my ($self, $kind, $response) = @_;
 
     foreach my $msg ( $self->_list_messages($kind, $response) ) {
-        carp "Fault returned from Exchange Server."
-            if $msg->{"${kind}ResponseMessage"}->{ResponseCode} ne 'NoError';
+        my $code = $msg->{"${kind}ResponseMessage"}->{ResponseCode} || '';
+        croak "Fault returned from Exchange Server: $code\n"
+            if $code ne 'NoError';
     }
 }
 
@@ -37,10 +33,10 @@ sub _list_calendaritems {
 
 # Find list of items within the view, then Get details for each one
 # (item:Body is only available this way, it's not returned by FindItem)
-sub _retrieve {
+sub retrieve_within_window {
     my ($self, $query) = @_;
 
-    my $find_response = scalar $self->FindItem->(
+    my $find_response = scalar $self->client->FindItem->(
         Traversal => 'Shallow',
         ItemShape => {
             BaseShape => 'IdOnly',
@@ -65,7 +61,7 @@ sub _retrieve {
     my @ids = map { $_->{ItemId}->{Id} }
                   $self->_list_calendaritems('FindItem', $find_response);
 
-    my $get_response = scalar $self->GetItem->(
+    my $get_response = scalar $self->client->GetItem->(
         ItemShape => {
             BaseShape => 'IdOnly',
             AdditionalProperties => {

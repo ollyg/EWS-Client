@@ -1,9 +1,10 @@
-package EWS::Calendar::Role::SOAPClient;
+package EWS::Client::Role::SOAP;
 use Moose::Role;
 
 use XML::Compile::WSDL11;
 use XML::Compile::SOAP11;
 use XML::Compile::Transport::SOAPHTTP;
+use File::ShareDir ();
 
 has transporter => (
     is => 'ro',
@@ -38,8 +39,13 @@ sub _build_wsdl {
 has schema_path => (
     is => 'ro',
     isa => 'Str',
-    required => 1,
+    lazy_build => 1,
 );
+
+sub _build_schema_path {
+    my $self = shift;
+    return File::ShareDir::dist_dir('EWS-Client');
+}
 
 no Moose::Role;
 1;

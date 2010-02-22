@@ -4,6 +4,7 @@ use Moose;
 use Moose::Util::TypeConstraints;
 use DateTime::Format::ISO8601;
 use DateTime;
+use HTML::Strip;
 use Encode;
 
 has Start => (
@@ -122,7 +123,8 @@ has AppointmentState => (
 has LegacyFreeBusyStatus => (
     is => 'ro',
     isa => enum([qw/Free Tentative Busy OOF NoData/]),
-    required => 1,
+    required => 0,
+    default => 'NoData',
 );
 
 sub Status  { (shift)->LegacyFreeBusyStatus }
@@ -150,30 +152,37 @@ sub BUILDARGS {
 
     # fish data out of deep structure
     $params->{'Organizer'} = $params->{'Organizer'}->{'Mailbox'}->{'Name'};
+    $params->{'Body'} = $params->{'Body'}->{'_'};
 
     # rework semicolon separated list into array, and also remove Organizer
     $params->{'DisplayTo'} = [ grep {$_ ne $params->{'Organizer'}}
                                     split m/; /, $params->{'DisplayTo'} ];
 
-    # the Body is usually a mess if created by Outlook
-    $params->{'Body'} = $params->{'Body'}->{'_'};
-    $params->{'Body'} =~ s/^\s+//;
-    $params->{'Body'} =~ s/\s+$//;
-    $params->{'Body'} =~ s/\n{3,}/\n\n/g;
-    $params->{'Body'} =~ s/ +/ /g;
-
     # set Perl's encoding flag on all data coming from Exchange
+    # also strip HTML tags from incoming data
+    my $hs = HTML::Strip->new(emit_spaces => 0);
+
     foreach my $key (keys %$params) {
         if (ref $params->{$key} eq 'ARRAY') {
-            $params->{$key} = [ map {Encode::encode("utf8", $_)} @{ $params->{$key} } ];
+            $params->{$key} = [
+                map {$hs->parse($_)}
+                map {Encode::encode('utf8', $_)}
+                    @{ $params->{$key} }
+            ];
         }
         elsif (ref $params->{$key}) {
             next;
         }
         else {
-            $params->{$key} = Encode::encode("utf8", $params->{$key});
+            $params->{$key} = $hs->parse(Encode::encode('utf8', $params->{$key}));
         }
     }
+
+    # the Body is usually a mess if created by Outlook
+    $params->{'Body'} =~ s/^\s+//;
+    $params->{'Body'} =~ s/\s+$//;
+    $params->{'Body'} =~ s/\n{3,}/\n\n/g;
+    $params->{'Body'} =~ s/ {2,}/ /g;
 
     return $params;
 }

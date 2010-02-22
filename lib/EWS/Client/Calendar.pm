@@ -1,35 +1,18 @@
-package EWS::Calendar::Read;
+package EWS::Client::Calendar;
 use Moose;
 
-with 'EWS::Calendar::Role::DoRetrieveWithQuery';
-use EWS::Calendar::Query;
+with 'EWS::Calendar::Role::Reader';
+# could add future roles for updates, here
 
 our $VERSION = '0.01';
 $VERSION = eval $VERSION; # numify for warning-free dev releases
 
-has username => (
+has client => (
     is => 'ro',
-    isa => 'Str',
+    isa => 'EWS::Client',
     required => 1,
+    weak_ref => 1,
 );
-
-has password => (
-    is => 'ro',
-    isa => 'Str',
-    required => 1,
-);
-
-has server => (
-    is => 'ro',
-    isa => 'Str',
-    required => 1,
-);
-
-sub retrieve {
-    my $self = shift;
-    my $query = EWS::Calendar::Query->new(@_);
-    return $self->_retrieve($query);
-}
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
@@ -39,27 +22,30 @@ __END__
 
 =head1 NAME
 
-EWS::Calendar::Read - Read Calendar Entries from Microsoft Exchange Server
+EWS::Client::Calendar - Calendar Entries from Microsoft Exchange Server
 
 =head1 VERSION
 
-This document refers to version 0.01 of EWS::Calendar::Read
+This document refers to version 0.01 of EWS::Client::Calendar
 
 =head1 SYNOPSIS
 
- use EWS::Calendar::Read;
- use DateTime::Format::ISO8601;
+First set up your Exchange Web Services client as per L<EWS::Client>:
+
+ use EWS::Client;
+ use DateTime;
  
- my $cal = EWS::Calendar::Read->new({
-     schema_path => '/path/to/local/ews/schema',
-     username    => 'oliver',
-     password    => 's3krit',
+ my $ews = EWS::Client->new({
      server      => 'exchangeserver.example.com',
+     username    => 'oliver',
+     password    => 's3krit', # or set in $ENV{EWS_PASS}
  });
- 
- my $entries = $cal->retrieve({
-     start => DateTime::Format::ISO8601->parse_datetime('2010-02-15T00:00:00Z'),
-     end   => DateTime::Format::ISO8601->parse_datetime('2010-02-22T00:00:00Z'),
+
+Then perform operations on the calendar entries:
+
+ my $entries = $ews->calendar->retrieve({
+     start => DateTime->now(),
+     end   => DateTime->now->add( month => 1 ),
  });
  
  print "I retrieved ". $entries->count ." items\n";
@@ -70,15 +56,20 @@ This document refers to version 0.01 of EWS::Calendar::Read
 
 =head1 DESCRIPTION
 
-This module will connect to a Microsoft Exchange server and retrieve the
-calendar entries within a given time window. The results are available in an
-iterator and convenience methods exist to access the properties of each entry.
+This module allows you to perform operations on the calendar entries in a
+Microsoft Exchange server. At present only read operations are supported,
+allowing you to retrieve calendar entries within a given time window. The
+results are available in an iterator and convenience methods exist to access
+the properties of each entry.
 
 =head1 METHODS
 
 =head2 CONSTRUCTOR
 
-=head2 EWS::Calendar::Read->new( \%arguments )
+=head2 EWS::Client::Calendar->new( \%arguments )
+
+You would not normally call this constructor. Use the L<EWS::Client>
+constructor instead.
 
 Instantiates a new calendar reader. Note that the action of performing a query
 for a set of results is separated from this step, so you can perform multiple
@@ -86,24 +77,11 @@ queries using this same object. Pass the following arguments in a hash ref:
 
 =over 4
 
-=item C<schema_path> => String (required)
+=item C<client> => C<EWS::Client> object (required)
 
-A folder on your file system which contains the WSDL and two further Schema
-files which describe the Exchange 2007 Web Services SOAP API.
-
-=item C<username> => String (required)
-
-The account username under which the module will connect to Exchange. This
-value will be URI encoded by the module.
-
-=item C<password> => String (required)
-
-The password of the account under which the module will connect to Exchange.
-This value will be URI encoded by the module.
-
-=item C<server> => Fully Qualified Domain Name (required)
-
-The host name of the Exchange server to which the module should connect.
+An instance of C<EWS::Client> which has been configured with your server
+location, user credentials and SOAP APIs. This will be stored as a weak
+reference.
 
 =back
 
@@ -188,9 +166,15 @@ item.
 
 A human readable description of the time span of the event, for example:
 
- * 25 Feb 2010
- * Feb 16 - 19, 2010
- * 24 Feb 2010 15:00 - 16:00
+=over 4
+
+=item * 25 Feb 2010
+
+=item * Feb 16 - 19, 2010
+
+=item * 24 Feb 2010 15:00 - 16:00
+
+=back
 
 =head2 $item->Subject
 
@@ -286,7 +270,7 @@ True if the calendar item has been cancelled, otherwise false.
 Contains a bitmask of flags on the entry, but you probably want to use
 C<IsCancelled> instead.
 
-=head2 $item->Status
+=head2 $item->Status (optional)
 
 Free/busy status for a calendar item, which can actually be one of the
 following four string values:
@@ -305,7 +289,9 @@ following four string values:
 
 =back
 
-=head2 $item->LegacyFreeBusyStatus
+If not provided the property will default to C<NoData>.
+
+=head2 $item->LegacyFreeBusyStatus (optional)
 
 This is an alias (the native name, in fact) for the C<< $item->Status >>
 property.
@@ -321,41 +307,10 @@ false.
 
 =head1 TODO
 
-This module family could be expanded into something more generic and
-scaleable. For example:
-
- my $ews = EWS::Server->new(\%args);
- 
- my $cal = $ews->calendar;
- $cal->retrieve({start => , end => });
- $cal->update(\%args);
- $cal->delete(\%args);
- 
- my $contacts = $ews->contacts({for => 'another.user@ews.example.com'});
- $contacts->retrieve;
-
-...and so on. I already have the contacts code so will probably implement the
-above in due course, if the tuits appear.
-
-I might also look at moving away from L<XML::Compile>, which is truely the
-most awesome of modules, but overkill for ths very small set of static calls.
-
 There is currently no handling of time zone information whatsoever. I'm
 waiting for my timezone to shift to UTC+1 in March before working on this, as
 I don't really want to read the Exchange API docs. Patches are welcome if you
 want to help out.
-
-=head1 REQUIREMENTS
-
-=over 4
-
-=item * L<XML::Compile::SOAP>
-
-=item * L<Moose>
-
-=item * L<DateTime>
-
-=back
 
 =head1 SEE ALSO
 

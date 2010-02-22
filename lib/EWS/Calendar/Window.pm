@@ -1,4 +1,4 @@
-package EWS::Calendar::Query;
+package EWS::Calendar::Window;
 use Moose;
 
 use DateTime;
