@@ -184,6 +184,14 @@ item.
 A L<DateTime> object representing the ending date and time for a calendar
 item.
 
+=head2 $item->TimeSpan
+
+A human readable description of the time span of the event, for example:
+
+ * 25 Feb 2010
+ * Feb 16 - 19, 2010
+ * 24 Feb 2010 15:00 - 16:00
+
 =head2 $item->Subject
 
 Represents the subject of a calendar item.

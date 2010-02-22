@@ -18,6 +18,36 @@ has End => (
     required => 1,
 );
 
+has TimeSpan => (
+    is => 'ro',
+    isa => 'Str',
+    lazy_build => 1,
+);
+
+sub _build_TimeSpan {
+    my $self = shift;
+    # FIXME: plenty of edge cases we are not picking up on, yet
+
+    if ($self->IsAllDayEvent) {
+        if ($self->Start->day == ($self->End->day - 1)) {
+            return sprintf '%s %s %s',
+                $self->Start->day, $self->Start->month_abbr,
+                $self->Start->year;
+        }
+        else {
+            return sprintf '%s %s - %s, %s',
+                $self->Start->month_abbr, $self->Start->day,
+                ($self->End->day - 1), $self->Start->year;
+        }
+    }
+    else {
+        return sprintf '%s %s %s %s - %s',
+            $self->Start->day, $self->Start->month_abbr,
+            $self->Start->year, $self->Start->strftime('%H:%M'),
+            $self->End->strftime('%H:%M');
+    }
+}
+
 has Subject => (
     is => 'ro',
     isa => 'Str',
@@ -114,16 +144,35 @@ sub BUILDARGS {
     my ($class, @rest) = @_;
     my $params = (scalar @rest == 1 ? $rest[0] : {@rest});
 
+    # could coerce but this is always required, so do it here instead
     $params->{'Start'} = DateTime::Format::ISO8601->parse_datetime($params->{'Start'});
     $params->{'End'}   = DateTime::Format::ISO8601->parse_datetime($params->{'End'});
-    $params->{'Body'}  = $params->{'Body'}->{'_'};
+
+    # fish data out of deep structure
     $params->{'Organizer'} = $params->{'Organizer'}->{'Mailbox'}->{'Name'};
+
+    # rework semicolon separated list into array, and also remove Organizer
     $params->{'DisplayTo'} = [ grep {$_ ne $params->{'Organizer'}}
                                     split m/; /, $params->{'DisplayTo'} ];
 
+    # the Body is usually a mess if created by Outlook
+    $params->{'Body'} = $params->{'Body'}->{'_'};
+    $params->{'Body'} =~ s/^\s+//;
+    $params->{'Body'} =~ s/\s+$//;
+    $params->{'Body'} =~ s/\n{3,}/\n\n/g;
+    $params->{'Body'} =~ s/ +/ /g;
+
+    # set Perl's encoding flag on all data coming from Exchange
     foreach my $key (keys %$params) {
-        next if ref $params->{$key};
-        $params->{$key} = Encode::encode("utf8", $params->{$key});
+        if (ref $params->{$key} eq 'ARRAY') {
+            $params->{$key} = [ map {Encode::encode("utf8", $_)} @{ $params->{$key} } ];
+        }
+        elsif (ref $params->{$key}) {
+            next;
+        }
+        else {
+            $params->{$key} = Encode::encode("utf8", $params->{$key});
+        }
     }
 
     return $params;
