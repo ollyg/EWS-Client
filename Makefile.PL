@@ -5,6 +5,7 @@ name           'EWS-Client';
 all_from       'lib/EWS/Client.pm';
 
 requires       'Moose'  => '0';
+requires       'MooseX::Iterator'  => '0';
 requires       'XML::Compile::SOAP'  => '0';
 requires       'DateTime'  => '0';
 requires       'DateTime::Format::ISO8601'  => '0';

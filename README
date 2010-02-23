@@ -2,7 +2,7 @@ NAME
     EWS::Client - Microsoft Exchange Web Services Client
 
 VERSION
-    This document refers to version 0.02 of EWS::Client
+    This document refers to version 0.03 of EWS::Client
 
 SYNOPSIS
     Set up your Exchange Web Services client:
@@ -77,6 +77,8 @@ TODO
 
 REQUIREMENTS
     *   Moose
+
+    *   MooseX::Iterator
 
     *   XML::Compile::SOAP
 

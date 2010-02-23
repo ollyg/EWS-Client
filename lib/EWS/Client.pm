@@ -9,7 +9,7 @@ with qw/
 use EWS::Client::Calendar;
 use URI::Escape ();
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 $VERSION = eval $VERSION; # numify for warning-free dev releases
 
 has username => (
@@ -68,7 +68,7 @@ EWS::Client - Microsoft Exchange Web Services Client
 
 =head1 VERSION
 
-This document refers to version 0.02 of EWS::Client
+This document refers to version 0.03 of EWS::Client
 
 =head1 SYNOPSIS
 
@@ -156,6 +156,8 @@ most awesome of modules, but overkill for ths very small set of static calls.
 =over 4
 
 =item * L<Moose>
+
+=item * L<MooseX::Iterator>
 
 =item * L<XML::Compile::SOAP>
 

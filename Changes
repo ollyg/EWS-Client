@@ -1,4 +1,10 @@
-libews-client-perl (0.02) karmic; urgency=low
+libews-client-perl (0.03) UNRELEASED; urgency=low
+
+  * Result set is an iterator, add MooseX::Iterator.
+
+ -- Oliver Gorwits <oliver.gorwits@oucs.ox.ac.uk>  Tue, 23 Feb 2010 10:48:57 +0000
+
+libews-client-perl (0.02) UNRELEASED; urgency=low
 
   * Add File::ShareDir dependency.
 
