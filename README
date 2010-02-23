@@ -37,7 +37,6 @@ DESCRIPTION
     entry.
 
 METHODS
-  CONSTRUCTOR
   EWS::Client->new( \%arguments )
     Instantiates a new EWS client. There won't be any connection to the
     server until you call one of the calendar or contacts retrieval methods.
@@ -61,25 +60,20 @@ METHODS
         Web Services SOAP API. They are shipped with this module so your
         providing this is optional.
 
-  COMPONENT METHODS
-    There exist separate components to access the calendar (and soon,
-    contacts) entries on the Exchange server, each bundled with this module
-    but having its own manual page. Each component is accessed through a
-    method and follow the links below to learn about the available features.
-
   $ews->calendar()
     Retrieves the EWS::Client::Calendar object which allows search and
-    retrieval of calendar entries.
+    retrieval of calendar entries and their various properties. See that
+    linked manual page for more details.
 
 TODO
-    I might look at moving away from XML::Compile::SOAP, which is truely the
-    most awesome of modules, but overkill for ths very small set of static
-    calls.
-
     There is currently no handling of time zone information whatsoever. I'm
     waiting for my timezone to shift to UTC+1 in March before working on
     this, as I don't really want to read the Exchange API docs. Patches are
     welcome if you want to help out.
+
+    I might look at alternatives to XML::Compile::SOAP, which is truely the
+    most awesome of modules, but overkill for ths very small set of static
+    calls.
 
 REQUIREMENTS
     *   Moose
@@ -93,6 +87,8 @@ REQUIREMENTS
     *   HTML::Strip
 
     *   URI::Escape
+
+    *   File::ShareDir
 
 AUTHOR
     Oliver Gorwits "<oliver.gorwits@oucs.ox.ac.uk>"

@@ -105,8 +105,6 @@ convenience methods exist to access the properties of each entry.
 
 =head1 METHODS
 
-=head2 CONSTRUCTOR
-
 =head2 EWS::Client->new( \%arguments )
 
 Instantiates a new EWS client. There won't be any connection to the server
@@ -137,27 +135,21 @@ API. They are shipped with this module so your providing this is optional.
 
 =back
 
-=head2 COMPONENT METHODS
-
-There exist separate components to access the calendar (and soon, contacts)
-entries on the Exchange server, each bundled with this module but having its
-own manual page. Each component is accessed through a method and follow the
-links below to learn about the available features.
-
 =head2 $ews->calendar()
 
 Retrieves the L<EWS::Client::Calendar> object which allows search and
-retrieval of calendar entries.
+retrieval of calendar entries and their various properties. See that linked
+manual page for more details.
 
 =head1 TODO
-
-I might look at moving away from L<XML::Compile::SOAP>, which is truely the
-most awesome of modules, but overkill for ths very small set of static calls.
 
 There is currently no handling of time zone information whatsoever. I'm
 waiting for my timezone to shift to UTC+1 in March before working on this, as
 I don't really want to read the Exchange API docs. Patches are welcome if you
 want to help out.
+
+I might look at alternatives to L<XML::Compile::SOAP>, which is truely the
+most awesome of modules, but overkill for ths very small set of static calls.
 
 =head1 REQUIREMENTS
 
@@ -174,6 +166,8 @@ want to help out.
 =item * L<HTML::Strip>
 
 =item * L<URI::Escape>
+
+=item * L<File::ShareDir>
 
 =back
 
