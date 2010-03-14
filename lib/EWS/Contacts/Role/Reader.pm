@@ -60,10 +60,10 @@ sub retrieve {
         (exists $opts->{email} ? (Mailbox => { EmailAddress => $opts->{email} }) : ())
     );
 
-    if (exists $msg->{'ResponseCode'} and defined $msg->{'ResponseCode'}
-        and $msg->{'ResponseCode'} eq 'ErrorNonPrimarySmtpAddress') {
+    if (exists $get_response->{'ResponseCode'} and defined $get_response->{'ResponseCode'}
+        and $get_response->{'ResponseCode'} eq 'ErrorNonPrimarySmtpAddress') {
 
-        $self->retrieve({email => $msg->{'MessageXml'}->{'Value'}->{'_'}});
+        $self->retrieve({email => $get_response->{'MessageXml'}->{'Value'}->{'_'}});
     }
 
     $self->_check_for_errors('FindItem', $get_response);
