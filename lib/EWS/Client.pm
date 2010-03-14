@@ -10,7 +10,7 @@ use EWS::Client::Contacts;
 use EWS::Client::Calendar;
 use URI::Escape ();
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 $VERSION = eval $VERSION; # numify for warning-free dev releases
 
 has username => (
@@ -80,7 +80,7 @@ EWS::Client - Microsoft Exchange Web Services Client
 
 =head1 VERSION
 
-This document refers to version 0.03 of EWS::Client
+This document refers to version 0.04 of EWS::Client
 
 =head1 SYNOPSIS
 
@@ -111,9 +111,9 @@ Then perform operations on the Exchange server:
 =head1 DESCRIPTION
 
 This module acts as a client to the Microsoft Exchange Web Services API. From
-here you can access calendar (and soon, contact) entries in a nicely
-abstracted fashion. Query results are generally available in an iterator and
-convenience methods exist to access the properties of each entry.
+here you can access calendar and contact entries in a nicely abstracted
+fashion. Query results are generally available in an iterator and convenience
+methods exist to access the properties of each entry.
 
 =head1 METHODS
 
@@ -153,15 +153,18 @@ Retrieves the L<EWS::Client::Calendar> object which allows search and
 retrieval of calendar entries and their various properties. See that linked
 manual page for more details.
 
+=head2 $ews->contacts()
+
+Retrieves the L<EWS::Client::Contacts> object which allows retrieval of
+contact entries and their telephone numbers. See that linked manual page for
+more details.
+
 =head1 TODO
 
 There is currently no handling of time zone information whatsoever. I'm
 waiting for my timezone to shift to UTC+1 in March before working on this, as
 I don't really want to read the Exchange API docs. Patches are welcome if you
 want to help out.
-
-I might look at alternatives to L<XML::Compile::SOAP>, which is truely the
-most awesome of modules, but overkill for ths very small set of static calls.
 
 =head1 REQUIREMENTS
 
@@ -191,7 +194,7 @@ Oliver Gorwits C<< <oliver.gorwits@oucs.ox.ac.uk> >>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright (c) Oliver Gorwits 2010.
+Copyright (c) University of Oxford 2010.
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

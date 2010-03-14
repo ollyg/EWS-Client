@@ -22,18 +22,17 @@ __END__
 
 =head1 NAME
 
-EWS::Client::Calendar - Calendar Entries from Microsoft Exchange Server
+EWS::Client::Contacts - Contact Entries from Microsoft Exchange Server
 
 =head1 VERSION
 
-This document refers to version 0.01 of EWS::Client::Calendar
+This document refers to version 0.01 of EWS::Client::Contacts
 
 =head1 SYNOPSIS
 
 First set up your Exchange Web Services client as per L<EWS::Client>:
 
  use EWS::Client;
- use DateTime;
  
  my $ews = EWS::Client->new({
      server      => 'exchangeserver.example.com',
@@ -41,37 +40,32 @@ First set up your Exchange Web Services client as per L<EWS::Client>:
      password    => 's3krit', # or set in $ENV{EWS_PASS}
  });
 
-Then perform operations on the calendar entries:
+Then retrieve the contact entries:
 
- my $entries = $ews->calendar->retrieve({
-     start => DateTime->now(),
-     end   => DateTime->now->add( month => 1 ),
- });
- 
+ my $entries = $ews->contacts->retrieve;
  print "I retrieved ". $entries->count ." items\n";
  
  while ($entries->has_next) {
-     print $entries->next->Subject, "\n";
+     print $entries->next->DisplayName, "\n";
  }
 
 =head1 DESCRIPTION
 
-This module allows you to perform operations on the calendar entries in a
-Microsoft Exchange server. At present only read operations are supported,
-allowing you to retrieve calendar entries within a given time window. The
-results are available in an iterator and convenience methods exist to access
-the properties of each entry.
+This module allows you to retrieve the set of contact entries for a user
+on a Microsoft Exchange server. At present only read operations are supported.
+The results are available in an iterator and convenience methods exist to
+access the properties of each entry.
 
 =head1 METHODS
 
 =head2 CONSTRUCTOR
 
-=head2 EWS::Client::Calendar->new( \%arguments )
+=head2 EWS::Client::Contacts->new( \%arguments )
 
 You would not normally call this constructor. Use the L<EWS::Client>
 constructor instead.
 
-Instantiates a new calendar reader. Note that the action of performing a query
+Instantiates a new contacts reader. Note that the action of performing a query
 for a set of results is separated from this step, so you can perform multiple
 queries using this same object. Pass the following arguments in a hash ref:
 
@@ -87,40 +81,42 @@ reference.
 
 =head2 QUERY AND RESULT SET
 
-=head2 $cal->retrieve( \%arguments )
+=head2 $contacts->retrieve( \%arguments )
 
-Query the Exchange server and retrieve calendar entries between the given
-timestamps. Pass the following arguments in a hash ref:
+Query the Exchange server and retrieve contact entries. Pass the following
+arguments in a hash ref:
 
 =over 4
 
-=item C<start> => DateTime object (required)
+=item C<email> => String (optional)
 
-Entries with an end date on or after this timestamp will be included in the
-returned results.
+By default the C<retrieve()> method will return contacts for the account under
+which you authenticated to the Exchange server (that is, the credentials
+passed to the L<EWS::Client> constructor).
 
-=item C<end> => DateTime object (required)
+Passing the primary SMTP address of another account will retrieve the contacts
+for that Exchange user instead, assuming you have rights to see their
+contacts. If you do not have rights, an error will be thrown.
 
-Entries with a start date before this timestamp will be included in the
-results.
+If you pass one of the account's secondary SMTP addresses this module
+I<should> be able to divine the primary SMTP address required.
 
 =back
 
-The returned object contains the collection of calendar entries which matched
-the start and end criteria, and is of type C<EWS::Calendar::ResultSet>. It's
-an iterator, so you can walk through the list of entries (see the synposis,
-above). For example:
+The returned object contains the collection of contact entries and is of type
+C<EWS::Contacts::ResultSet>. It's an iterator, so you can walk through the
+list of entries (see the synposis, above). For example:
 
- my $entries = $cal->retrieve({start => '', end => ''});
+ my $entries = $contacts->retrieve({email => 'nobody@example.com'});
 
 =head2 $entries->next
 
-Provides the next item in the collection of calendar entries, or C<undef> if
+Provides the next item in the collection of contact entries, or C<undef> if
 there are no more items to return. Usually used in a loop along with
 C<has_next> like so:
 
  while ($entries->has_next) {
-     print $entries->next->Subject, "\n";
+     print $entries->next->DisplayName, "\n";
  }
 
 =head2 $entries->peek
@@ -146,171 +142,52 @@ Returns the number of entries returned by the C<retrieve> server query.
 =head2 $entries->items
 
 Returns an array ref containing all the entries returned by the C<retrieve>
-server query. They are each objects of type C<EWS::Calendar::Item>.
+server query. They are each objects of type C<EWS::Contacts::Item>.
 
 =head2 ITEM PROPERTIES
 
-These descriptions are taken from Microsoft's on-line documentation.
-
-=head2 $item->Start
-
-A L<DateTime> object representing the starting date and time for a calendar
-item.
-
-=head2 $item->End
-
-A L<DateTime> object representing the ending date and time for a calendar
-item.
-
-=head2 $item->TimeSpan
-
-A human readable description of the time span of the event, for example:
-
-=over 4
-
-=item * 25 Feb 2010
-
-=item * Feb 16 - 19, 2010
-
-=item * 24 Feb 2010 15:00 - 16:00
-
-=back
-
-=head2 $item->Subject
-
-Represents the subject of a calendar item.
-
-=head2 $item->Body (optional)
-
-Text attachment to the calendar entry which the user may have entered content
-into.
-
-=head2 $item->has_Body
-
-Will return true if the event item has content in its Body property, otherwise
-returns false. Actually returns the length of the Body text content.
-
-=head2 $item->Location (optional)
-
-Friendly name for where a calendar item pertains to (e.g., a physical address
-or "My Office").
-
-=head2 $item->has_Location
-
-Will return true if the event item has content in its Location property,
-otherwise returns false. Actually returns the length of the Location text
-content.
-
-=head2 $item->Type
-
-The type of calendar item indicating its relationship to a recurrence, if any.
-This will be a string value of one of the following, only:
-
-=over 4
-
-=item * Single
-
-=item * Occurrence
-
-=item * Exception
-
-=back
-
-=head2 $item->CalendarItemType
-
-This is an alias (the native name, in fact) for the C<< $item->Type >>
-property.
-
-=head2 $item->IsRecurring
-
-True if the event is of Type Occurrence or Exception, which means that it is
-a recurring event, otherwise returns false.
-
-=head2 $item->Sensitivity
-
-Indicates the sensitivity of the item, which can be used to filter information
-your user sees. Will be a string and one of the following four values, only:
-
-=over 4
-
-=item * Normal
-
-=item * Personal
-
-=item * Private
-
-=item * Confidential
-
-=back
-
-=head2 $item->DisplayTo (optional)
-
-When a client creates a calendar entry, there can be other people invited to
-the event (usually via the To: box in Outlook, or similar). This property
-contains an array ref of the display names ("Firstname Lastname") or the
-parties invited to the event.
-
-=head2 $item->has_DisplayTo
-
-Will return true if there are entries in the C<< $item->DisplayTo >> property,
-in other words there were invitees on this event, otherwise returns false.
-Actually returns the number of entries in that list, which may be useful.
-
-=head2 $item->Organizer
-
-The display name (probably "Firstname Lastname") of the party responsible for
-creating the entry.
-
-=head2 $item->IsCancelled
-
-True if the calendar item has been cancelled, otherwise false.
-
-=head2 $item->AppointmentState
-
-Contains a bitmask of flags on the entry, but you probably want to use
-C<IsCancelled> instead.
-
-=head2 $item->Status (optional)
-
-Free/busy status for a calendar item, which can actually be one of the
-following four string values:
-
-=over 4
-
-=item * Free
-
-=item * Tentative
-
-=item * Busy
-
-=item * OOF (means Out Of Office)
-
-=item * NoData (means something went wrong)
-
-=back
-
-If not provided the property will default to C<NoData>.
-
-=head2 $item->LegacyFreeBusyStatus (optional)
-
-This is an alias (the native name, in fact) for the C<< $item->Status >>
-property.
-
-=head2 $item->IsDraft
-
-Indicates whether an item has not yet been sent.
-
-=head2 $item->IsAllDayEvent
-
-True if a calendar item is to be interpreted as lasting all day, otherwise
-false.
+=head2 $item->DisplayName
+
+The field you should use to describe this entry, being probably the person or
+business's name.
+
+=head2 $item->PhoneNumbers
+
+This property comprises all the phone numbers associated with the contact.
+
+An Exchange contact has a number of fields for storing numbers of different
+types, such as Mobile Phone, Business Line, and so on. Each of these may in
+turn store a free text field so people often put multiple numbers in,
+separated by a delimiter.
+
+In this property you'll find a hash ref of all this data, with keys being the
+number types (Mobile Phone, etc), and values being array refs of numbers. The
+module splits up number lists but preserves their order. For example:
+
+ my $numbers = $entry->PhoneNumbers;
+ 
+ foreach my $type (keys %{ $numbers }) {
+ 
+     foreach my $extn (@{ $numbers->{$type} }) {
+ 
+         print "$type : $extn \n";
+     }
+ }
+ 
+ # might print something like:
+ 
+ Oliver Gorwits : 73244
+ John Smith : 88888
+
+In the future this format may change, or may migrate into an object based
+storage.
 
 =head1 TODO
 
-There is currently no handling of time zone information whatsoever. I'm
-waiting for my timezone to shift to UTC+1 in March before working on this, as
-I don't really want to read the Exchange API docs. Patches are welcome if you
-want to help out.
+There should be more properties imported than just the DisplayName and
+PhoneNumbers.
+
+PhoneNumbers will maybe migrate into some kind of object based storage.
 
 =head1 SEE ALSO
 
@@ -326,7 +203,7 @@ Oliver Gorwits C<< <oliver.gorwits@oucs.ox.ac.uk> >>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright (c) Oliver Gorwits 2010.
+Copyright (c) University of Oxford 2010.
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

@@ -2,7 +2,7 @@ NAME
     EWS::Client - Microsoft Exchange Web Services Client
 
 VERSION
-    This document refers to version 0.03 of EWS::Client
+    This document refers to version 0.04 of EWS::Client
 
 SYNOPSIS
     Set up your Exchange Web Services client:
@@ -31,10 +31,9 @@ SYNOPSIS
 
 DESCRIPTION
     This module acts as a client to the Microsoft Exchange Web Services API.
-    From here you can access calendar (and soon, contact) entries in a
-    nicely abstracted fashion. Query results are generally available in an
-    iterator and convenience methods exist to access the properties of each
-    entry.
+    From here you can access calendar and contact entries in a nicely
+    abstracted fashion. Query results are generally available in an iterator
+    and convenience methods exist to access the properties of each entry.
 
 METHODS
   EWS::Client->new( \%arguments )
@@ -65,15 +64,16 @@ METHODS
     retrieval of calendar entries and their various properties. See that
     linked manual page for more details.
 
+  $ews->contacts()
+    Retrieves the EWS::Client::Contacts object which allows retrieval of
+    contact entries and their telephone numbers. See that linked manual page
+    for more details.
+
 TODO
     There is currently no handling of time zone information whatsoever. I'm
     waiting for my timezone to shift to UTC+1 in March before working on
     this, as I don't really want to read the Exchange API docs. Patches are
     welcome if you want to help out.
-
-    I might look at alternatives to XML::Compile::SOAP, which is truely the
-    most awesome of modules, but overkill for ths very small set of static
-    calls.
 
 REQUIREMENTS
     *   Moose
@@ -96,7 +96,7 @@ AUTHOR
     Oliver Gorwits "<oliver.gorwits@oucs.ox.ac.uk>"
 
 COPYRIGHT & LICENSE
-    Copyright (c) Oliver Gorwits 2010.
+    Copyright (c) University of Oxford 2010.
 
     This library is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.
