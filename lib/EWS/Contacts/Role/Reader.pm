@@ -24,11 +24,12 @@ sub _check_for_errors {
 sub _list_contactitems {
     my ($self, $kind, $response) = @_;
 
-    return map { $_->{Contact} }
-           map { @{ $_->{Items}->{cho_Item} } }
-           map { exists $_->{RootFolder} ? $_->{RootFolder} : $_ } 
-           map { $_->{"${kind}ResponseMessage"} }
-               $self->_list_messages($kind, $response);
+    return map  { $_->{Contact} }
+           grep { defined $_->{'Contact'}->{'DisplayName'} and length $_->{'Contact'}->{'DisplayName'} }
+           map  { @{ $_->{Items}->{cho_Item} } }
+           map  { exists $_->{RootFolder} ? $_->{RootFolder} : $_ } 
+           map  { $_->{"${kind}ResponseMessage"} }
+                $self->_list_messages($kind, $response);
 }
 
 sub _get_contacts {
