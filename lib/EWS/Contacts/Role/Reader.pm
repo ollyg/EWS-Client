@@ -31,63 +31,39 @@ sub _list_contactitems {
                $self->_list_messages($kind, $response);
 }
 
+sub _get_contacts {
+    my ($self, @account_id) = @_;
+
+    return scalar $self->client->FindItem->(
+        ItemShape => { BaseShape => 'AllProperties' },
+        ParentFolderIds => {
+            cho_FolderId => [
+                { DistinguishedFolderId =>
+                    {
+                        Id => 'contacts',
+                        @account_id, # optional
+                    }
+                }
+            ]
+        },
+        Traversal => 'Shallow',
+    );
+}
+
 # find primarysmtp if passed an account id.
 # then find contacts in the account.
 sub retrieve {
     my ($self, $opts) = @_;
-    my @account_id = ();
 
-    if (defined $opts->{email}) {
-        # the email passed might not be the primarysmtp, and we need that to
-        # refer to the account. Exchange will return the primarysmtp in an error.
-
-        my $primarysmtp_response = scalar $self->client->FindItem->(
-            ItemShape => { BaseShape => 'AllProperties' },
-            ParentFolderIds => {
-                    cho_FolderId => [
-                        { DistinguishedFolderId =>
-                            {   
-                                Id => 'contacts',
-                                Mailbox => { EmailAddress => $opts->{email} }
-                            }   
-                        }   
-                    ]   
-                },  
-            Traversal => 'Shallow',
-        );
-
-        my $msg = [$self->_list_messages('FindItem', $primarysmtp_response)]->[0];
-        my $primarysmtp = $opts->{email}; # last resort
-
-        if (defined $msg->{'ResponseCode'}) {
-            if ($msg->{'ResponseCode'} eq 'ErrorNonPrimarySmtpAddress') { # good
-                $primarysmtp = $msg->{'MessageXml'}->{'Value'}->{'_'};
-            }
-            elsif ($msg->{'ResponseCode'} eq 'NoError') { # strange, but good
-                $primarysmtp = $opts->{email};
-            }
-            else { # error?!
-                $self->_check_for_errors('FindItem', $primarysmtp_response);
-            }
-        }
-
-        @account_id = (Mailbox => { EmailAddress => $primarysmtp });
-    }
-
-    my $get_response = scalar $self->client->FindItem->(
-        ItemShape => { BaseShape => 'AllProperties' },
-        ParentFolderIds => {
-                cho_FolderId => [
-                    { DistinguishedFolderId =>
-                        {   
-                            Id => 'contacts',
-                            @account_id, # optional
-                        }   
-                    }   
-                ]   
-            },  
-        Traversal => 'Shallow',
+    my $get_response = $self->_get_contacts(
+        (exists $opts->{email} ? (Mailbox => { EmailAddress => $opts->{email} }) : ())
     );
+
+    if (exists $msg->{'ResponseCode'} and defined $msg->{'ResponseCode'}
+        and $msg->{'ResponseCode'} eq 'ErrorNonPrimarySmtpAddress') {
+
+        $self->retrieve({email => $msg->{'MessageXml'}->{'Value'}->{'_'}});
+    }
 
     $self->_check_for_errors('FindItem', $get_response);
 
@@ -98,4 +74,3 @@ sub retrieve {
 
 no Moose::Role;
 1;
-
