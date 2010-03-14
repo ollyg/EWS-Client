@@ -6,6 +6,7 @@ with qw/
     EWS::Client::Role::GetItem
     EWS::Client::Role::FindItem
 /;
+use EWS::Client::Contacts;
 use EWS::Client::Calendar;
 use URI::Escape ();
 
@@ -29,6 +30,17 @@ has server => (
     isa => 'Str',
     required => 1,
 );
+
+has contacts => (
+    is => 'ro',
+    isa => 'EWS::Client::Contacts',
+    lazy_build => 1,
+);
+
+sub _build_contacts {
+    my $self = shift;
+    return EWS::Client::Contacts->new({ client => $self });
+}
 
 has calendar => (
     is => 'ro',

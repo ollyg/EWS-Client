@@ -1,6 +1,7 @@
 package EWS::Calendar::Item;
 use Moose;
 
+use Moose::Util::TypeConstraints;
 use DateTime::Format::ISO8601;
 use DateTime;
 use HTML::Strip;
