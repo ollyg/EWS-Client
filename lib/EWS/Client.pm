@@ -107,6 +107,8 @@ Then perform operations on the Exchange server:
  while ($entries->has_next) {
      print $entries->next->Subject, "\n";
  }
+ 
+ my $contacts = $ews->contacts->retrieve;
 
 =head1 DESCRIPTION
 

@@ -28,6 +28,8 @@ SYNOPSIS
  while ($entries->has_next) {
          print $entries->next->Subject, "\n";
      }
+     
+ my $contacts = $ews->contacts->retrieve;
 
 DESCRIPTION
     This module acts as a client to the Microsoft Exchange Web Services API.
