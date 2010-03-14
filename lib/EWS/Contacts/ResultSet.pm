@@ -1,12 +1,12 @@
-package EWS::Calendar::ResultSet;
+package EWS::Contacts::ResultSet;
 use Moose;
 use MooseX::Iterator;
 
-use EWS::Calendar::Item;
+use EWS::Contacts::Item;
 
 has items => (
     is => 'ro',
-    isa => 'ArrayRef[EWS::Calendar::Item]',
+    isa => 'ArrayRef[EWS::Contacts::Item]',
     required => 1,
 );
 
@@ -15,7 +15,7 @@ sub BUILDARGS {
     my $params = (scalar @rest == 1 ? $rest[0] : {@rest});
 
     # promote hashes returned from Exchange into Item objects
-    $params->{items} = [ map { EWS::Calendar::Item->new($_) }
+    $params->{items} = [ map { EWS::Contacts::Item->new($_) }
                              @{$params->{items}} ];
     return $params;
 }

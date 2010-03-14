@@ -1,7 +1,7 @@
 package EWS::Contacts::Role::Reader;
 use Moose::Role;
 
-use EWS::Contacts::EntryResultSet;
+use EWS::Contacts::ResultSet;
 use Carp;
 
 sub _list_messages {
@@ -67,7 +67,7 @@ sub retrieve {
 
     $self->_check_for_errors('FindItem', $get_response);
 
-    return EWS::Contacts::EntryResultSet->new({
+    return EWS::Contacts::ResultSet->new({
         items => [ $self->_list_contactitems('FindItem', $get_response) ]
     });
 }
