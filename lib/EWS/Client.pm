@@ -10,7 +10,7 @@ use EWS::Client::Contacts;
 use EWS::Client::Calendar;
 use URI::Escape ();
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 $VERSION = eval $VERSION; # numify for warning-free dev releases
 
 has username => (
@@ -80,11 +80,12 @@ EWS::Client - Microsoft Exchange Web Services Client
 
 =head1 VERSION
 
-This document refers to version 0.04 of EWS::Client
+This document refers to version 0.05 of EWS::Client
 
 =head1 SYNOPSIS
 
-Set up your Exchange Web Services client:
+Set up your Exchange Web Services client. I<You will need HTTP Basic Access
+Auth enabled on the Exchange server to use this module>:
 
  use EWS::Client;
  use DateTime;
@@ -122,7 +123,8 @@ methods exist to access the properties of each entry.
 =head2 EWS::Client->new( \%arguments )
 
 Instantiates a new EWS client. There won't be any connection to the server
-until you call one of the calendar or contacts retrieval methods.
+until you call one of the calendar or contacts retrieval methods. You will
+need HTTP Basic Access Auth enabled on the Exchange server to use this module.
 
 =over 4
 

@@ -1,3 +1,9 @@
+libews-client-perl (0.05) UNRELEASED; urgency=low
+
+  * Added POD note about HTTP BasicAuth - thanks to Darren W. 
+
+ -- Oliver Gorwits <oliver.gorwits@oucs.ox.ac.uk>  Tue, 16 Mar 2010 19:48:47 +0000
+
 libews-client-perl (0.04) UNRELEASED; urgency=low
 
   * Add Contacts retrieval.

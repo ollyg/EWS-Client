@@ -2,10 +2,11 @@ NAME
     EWS::Client - Microsoft Exchange Web Services Client
 
 VERSION
-    This document refers to version 0.04 of EWS::Client
+    This document refers to version 0.05 of EWS::Client
 
 SYNOPSIS
-    Set up your Exchange Web Services client:
+    Set up your Exchange Web Services client. *You will need HTTP Basic
+    Access Auth enabled on the Exchange server to use this module*:
 
      use EWS::Client;
      use DateTime;
@@ -41,6 +42,8 @@ METHODS
   EWS::Client->new( \%arguments )
     Instantiates a new EWS client. There won't be any connection to the
     server until you call one of the calendar or contacts retrieval methods.
+    You will need HTTP Basic Access Auth enabled on the Exchange server to
+    use this module.
 
     "server" => Fully Qualified Domain Name (required)
         The host name of the Exchange server to which the module should
