@@ -1,3 +1,9 @@
+libews-client-perl (0.06) UNRELEASED; urgency=low
+
+  * Add check for no items returned from server - thanks Mike M. 
+
+ -- Oliver Gorwits <oliver.gorwits@oucs.ox.ac.uk>  Mon, 22 Mar 2010 21:25:58 +0000
+
 libews-client-perl (0.05) UNRELEASED; urgency=low
 
   * Added POD note about HTTP BasicAuth - thanks to Darren W. 

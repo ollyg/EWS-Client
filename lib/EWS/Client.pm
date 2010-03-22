@@ -10,7 +10,7 @@ use EWS::Client::Contacts;
 use EWS::Client::Calendar;
 use URI::Escape ();
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 $VERSION = eval $VERSION; # numify for warning-free dev releases
 
 has username => (
@@ -80,7 +80,7 @@ EWS::Client - Microsoft Exchange Web Services Client
 
 =head1 VERSION
 
-This document refers to version 0.05 of EWS::Client
+This document refers to version 0.06 of EWS::Client
 
 =head1 SYNOPSIS
 

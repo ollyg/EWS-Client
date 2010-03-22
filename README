@@ -2,7 +2,7 @@ NAME
     EWS::Client - Microsoft Exchange Web Services Client
 
 VERSION
-    This document refers to version 0.05 of EWS::Client
+    This document refers to version 0.06 of EWS::Client
 
 SYNOPSIS
     Set up your Exchange Web Services client. *You will need HTTP Basic

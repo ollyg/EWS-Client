@@ -25,7 +25,7 @@ sub _list_calendaritems {
     my ($self, $kind, $response) = @_;
 
     return map { $_->{CalendarItem} }
-           map { @{ $_->{Items}->{cho_Item} } }
+           map { @{ $_->{Items}->{cho_Item} || [] } }
            map { exists $_->{RootFolder} ? $_->{RootFolder} : $_ } 
            map { $_->{"${kind}ResponseMessage"} }
                $self->_list_messages($kind, $response);
@@ -60,6 +60,9 @@ sub retrieve_within_window {
 
     my @ids = map { $_->{ItemId}->{Id} }
                   $self->_list_calendaritems('FindItem', $find_response);
+
+    return return EWS::Calendar::ResultSet->new({items => []})
+        if scalar @ids == 0;
 
     my $get_response = scalar $self->client->GetItem->(
         ItemShape => {

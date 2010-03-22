@@ -26,7 +26,7 @@ sub _list_contactitems {
 
     return map  { $_->{Contact} }
            grep { defined $_->{'Contact'}->{'DisplayName'} and length $_->{'Contact'}->{'DisplayName'} }
-           map  { @{ $_->{Items}->{cho_Item} } }
+           map  { @{ $_->{Items}->{cho_Item} || [] } }
            map  { exists $_->{RootFolder} ? $_->{RootFolder} : $_ } 
            map  { $_->{"${kind}ResponseMessage"} }
                 $self->_list_messages($kind, $response);
