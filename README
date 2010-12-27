@@ -2,7 +2,7 @@ NAME
     EWS::Client - Microsoft Exchange Web Services Client
 
 VERSION
-    This document refers to version 0.06 of EWS::Client
+    version 1.103610
 
 SYNOPSIS
     Set up your Exchange Web Services client. *You will need HTTP Basic
@@ -98,11 +98,11 @@ REQUIREMENTS
     *   File::ShareDir
 
 AUTHOR
-    Oliver Gorwits "<oliver.gorwits@oucs.ox.ac.uk>"
+    Oliver Gorwits <oliver@cpan.org>
 
-COPYRIGHT & LICENSE
-    Copyright (c) University of Oxford 2010.
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2010 by University of Oxford.
 
-    This library is free software; you can redistribute it and/or modify it
-    under the same terms as Perl itself.
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
 

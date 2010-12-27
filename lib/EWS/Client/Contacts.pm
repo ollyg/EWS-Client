@@ -1,11 +1,11 @@
 package EWS::Client::Contacts;
+BEGIN {
+  $EWS::Client::Contacts::VERSION = '1.103610';
+}
 use Moose;
 
 with 'EWS::Contacts::Role::Reader';
 # could add future roles for updates, here
-
-our $VERSION = '0.01';
-$VERSION = eval $VERSION; # numify for warning-free dev releases
 
 has client => (
     is => 'ro',
@@ -18,7 +18,11 @@ __PACKAGE__->meta->make_immutable;
 no Moose;
 1;
 
+# ABSTRACT: Contact Entries from Microsoft Exchange Server
+
+
 __END__
+=pod
 
 =head1 NAME
 
@@ -26,7 +30,7 @@ EWS::Client::Contacts - Contact Entries from Microsoft Exchange Server
 
 =head1 VERSION
 
-This document refers to version 0.01 of EWS::Client::Contacts
+version 1.103610
 
 =head1 SYNOPSIS
 
@@ -199,13 +203,14 @@ PhoneNumbers will maybe migrate into some kind of object based storage.
 
 =head1 AUTHOR
 
-Oliver Gorwits C<< <oliver.gorwits@oucs.ox.ac.uk> >>
+Oliver Gorwits <oliver@cpan.org>
 
-=head1 COPYRIGHT & LICENSE
+=head1 COPYRIGHT AND LICENSE
 
-Copyright (c) University of Oxford 2010.
+This software is copyright (c) 2010 by University of Oxford.
 
-This library is free software; you can redistribute it and/or modify it under
-the same terms as Perl itself.
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
+

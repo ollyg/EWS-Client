@@ -1,4 +1,7 @@
 package EWS::Calendar::Role::RetrieveWithinWindow;
+BEGIN {
+  $EWS::Calendar::Role::RetrieveWithinWindow::VERSION = '1.103610';
+}
 use Moose::Role;
 
 use EWS::Calendar::ResultSet;
@@ -109,4 +112,29 @@ sub retrieve_within_window {
 
 no Moose::Role;
 1;
+
+
+__END__
+=pod
+
+=head1 NAME
+
+EWS::Calendar::Role::RetrieveWithinWindow
+
+=head1 VERSION
+
+version 1.103610
+
+=head1 AUTHOR
+
+Oliver Gorwits <oliver@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by University of Oxford.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
 

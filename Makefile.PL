@@ -1,19 +1,73 @@
-use inc::Module::Install;
-perl_version '5.008001';
 
-name           'EWS-Client';
-all_from       'lib/EWS/Client.pm';
+use strict;
+use warnings;
 
-requires       'Moose'  => '0';
-requires       'MooseX::Iterator'  => '0';
-requires       'XML::Compile::SOAP'  => '0';
-requires       'DateTime'  => '0';
-requires       'DateTime::Format::ISO8601'  => '0';
-requires       'HTML::Strip'  => '0';
-requires       'URI::Escape'  => '0';
-requires       'File::ShareDir'  => '0';
-requires       'List::MoreUtils'  => '0';
 
-install_share;
 
-WriteAll;
+use ExtUtils::MakeMaker 6.31;
+
+use File::ShareDir::Install;
+install_share dist => "share";
+
+
+my %WriteMakefileArgs = (
+  'ABSTRACT' => 'Microsoft Exchange Web Services Client',
+  'AUTHOR' => 'Oliver Gorwits <oliver@cpan.org>',
+  'BUILD_REQUIRES' => {
+    'Test::More' => '0'
+  },
+  'CONFIGURE_REQUIRES' => {
+    'ExtUtils::MakeMaker' => '6.31',
+    'File::ShareDir::Install' => '0.03'
+  },
+  'DISTNAME' => 'EWS-Client',
+  'EXE_FILES' => [],
+  'LICENSE' => 'perl',
+  'NAME' => 'EWS::Client',
+  'PREREQ_PM' => {
+    'Carp' => '0',
+    'DateTime' => '0',
+    'DateTime::Format::ISO8601' => '0',
+    'Encode' => '0',
+    'File::ShareDir' => '0',
+    'HTML::Strip' => '0',
+    'List::MoreUtils' => '0',
+    'Moose' => '0',
+    'Moose::Role' => '0',
+    'Moose::Util::TypeConstraints' => '0',
+    'MooseX::Iterator' => '0',
+    'URI::Escape' => '0',
+    'XML::Compile::SOAP11' => '0',
+    'XML::Compile::Transport::SOAPHTTP' => '0',
+    'XML::Compile::WSDL11' => '0'
+  },
+  'VERSION' => '1.103610',
+  'test' => {
+    'TESTS' => 't/*.t'
+  }
+);
+
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
+  my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
+  my $pp = $WriteMakefileArgs{PREREQ_PM};
+  for my $mod ( keys %$br ) {
+    if ( exists $pp->{$mod} ) {
+      $pp->{$mod} = $br->{$mod} if $br->{$mod} > $pp->{$mod};
+    }
+    else {
+      $pp->{$mod} = $br->{$mod};
+    }
+  }
+}
+
+delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
+  unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+
+WriteMakefile(%WriteMakefileArgs);
+
+package
+MY;
+use File::ShareDir::Install qw(postamble);
+
+
