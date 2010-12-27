@@ -4,9 +4,6 @@ use Moose;
 with 'EWS::Contacts::Role::Reader';
 # could add future roles for updates, here
 
-our $VERSION = '0.01';
-$VERSION = eval $VERSION; # numify for warning-free dev releases
-
 has client => (
     is => 'ro',
     isa => 'EWS::Client',
@@ -18,15 +15,7 @@ __PACKAGE__->meta->make_immutable;
 no Moose;
 1;
 
-__END__
-
-=head1 NAME
-
-EWS::Client::Contacts - Contact Entries from Microsoft Exchange Server
-
-=head1 VERSION
-
-This document refers to version 0.01 of EWS::Client::Contacts
+# ABSTRACT: Contact Entries from Microsoft Exchange Server
 
 =head1 SYNOPSIS
 
@@ -196,16 +185,3 @@ PhoneNumbers will maybe migrate into some kind of object based storage.
 =item * L<http://msdn.microsoft.com/en-us/library/aa580675.aspx>
 
 =back
-
-=head1 AUTHOR
-
-Oliver Gorwits C<< <oliver.gorwits@oucs.ox.ac.uk> >>
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) University of Oxford 2010.
-
-This library is free software; you can redistribute it and/or modify it under
-the same terms as Perl itself.
-
-=cut

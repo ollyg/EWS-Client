@@ -10,9 +10,6 @@ use EWS::Client::Contacts;
 use EWS::Client::Calendar;
 use URI::Escape ();
 
-our $VERSION = '0.06';
-$VERSION = eval $VERSION; # numify for warning-free dev releases
-
 has username => (
     is => 'ro',
     isa => 'Str',
@@ -72,15 +69,7 @@ __PACKAGE__->meta->make_immutable;
 no Moose;
 1;
 
-__END__
-
-=head1 NAME
-
-EWS::Client - Microsoft Exchange Web Services Client
-
-=head1 VERSION
-
-This document refers to version 0.06 of EWS::Client
+# ABSTRACT: Microsoft Exchange Web Services Client
 
 =head1 SYNOPSIS
 
@@ -191,16 +180,3 @@ want to help out.
 =item * L<File::ShareDir>
 
 =back
-
-=head1 AUTHOR
-
-Oliver Gorwits C<< <oliver.gorwits@oucs.ox.ac.uk> >>
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) University of Oxford 2010.
-
-This library is free software; you can redistribute it and/or modify it under
-the same terms as Perl itself.
-
-=cut
