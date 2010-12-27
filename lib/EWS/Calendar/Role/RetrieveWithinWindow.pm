@@ -37,6 +37,9 @@ sub retrieve_within_window {
     my ($self, $query) = @_;
 
     my $find_response = scalar $self->client->FindItem->(
+        RequestVersion => {
+            Version => $self->client->server_version,
+        },
         Traversal => 'Shallow',
         ItemShape => {
             BaseShape => 'IdOnly',
@@ -65,6 +68,9 @@ sub retrieve_within_window {
         if scalar @ids == 0;
 
     my $get_response = scalar $self->client->GetItem->(
+        RequestVersion => {
+            Version => $self->client->server_version,
+        },
         ItemShape => {
             BaseShape => 'IdOnly',
             AdditionalProperties => {

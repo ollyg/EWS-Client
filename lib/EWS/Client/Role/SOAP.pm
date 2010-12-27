@@ -6,6 +6,13 @@ use XML::Compile::SOAP11;
 use XML::Compile::Transport::SOAPHTTP;
 use File::ShareDir ();
 
+has server_version => (
+    is => 'ro',
+    isa => 'Str',
+    default => 'Exchange2007_SP1',
+    required => 0,
+);
+
 has use_negotiated_auth => (
     is => 'ro',
     isa => 'Any',

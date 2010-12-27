@@ -36,6 +36,9 @@ sub _get_contacts {
     my ($self, @account_id) = @_;
 
     return scalar $self->client->FindItem->(
+        RequestVersion => {
+            Version => $self->client->server_version,
+        },
         ItemShape => { BaseShape => 'AllProperties' },
         ParentFolderIds => {
             cho_FolderId => [

@@ -144,6 +144,12 @@ A folder on your file system which contains the WSDL and two further Schema
 files (messages, and types) which describe the Exchange 2007 Web Services SOAP
 API. They are shipped with this module so your providing this is optional.
 
+=item C<server_version> => String (optional)
+
+In each request to the server is specified the API version we expect to use.
+By default this is set to C<Exchange2007_SP1> but you have the opportunity to
+set it to C<Exchange2007> if you wish using this option.
+
 =back
 
 =head2 $ews->calendar()
@@ -160,16 +166,11 @@ more details.
 
 =head1 KNOWN ISSUES
 
-Patches welcome! Especially now that the author has no access to an MS
-Exchange server.
-
 =over 4
 
 =item * No handling of time zone information, sorry.
 
 =item * The C<SOAPAction> Header might be wrong for Exchange 2010.
-
-=item * Seem to be missing C<RequestServerVersion> SOAP Header.
 
 =back
 
