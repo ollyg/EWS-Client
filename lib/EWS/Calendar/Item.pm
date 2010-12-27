@@ -75,7 +75,7 @@ sub has_Location { return length ((shift)->Location) }
 
 has CalendarItemType => (
     is => 'ro',
-    isa => enum([qw/Single Occurrence Eception/]),
+    isa => enum([qw/Single Occurrence Exception/]),
     required => 1,
 );
 

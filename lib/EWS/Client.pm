@@ -152,12 +152,20 @@ Retrieves the L<EWS::Client::Contacts> object which allows retrieval of
 contact entries and their telephone numbers. See that linked manual page for
 more details.
 
-=head1 TODO
+=head1 KNOWN ISSUES
 
-There is currently no handling of time zone information whatsoever. I'm
-waiting for my timezone to shift to UTC+1 in March before working on this, as
-I don't really want to read the Exchange API docs. Patches are welcome if you
-want to help out.
+Patches welcome! Especially now that the author has no access to an MS
+Exchange server.
+
+=over 4
+
+=item * No handling of time zone information, sorry.
+
+=item * The C<SOAPAction> Header might be wrong for Exchange 2010.
+
+=item * Seem to be missing C<RequestServerVersion> SOAP Header.
+
+=back
 
 =head1 REQUIREMENTS
 

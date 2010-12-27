@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+  * Fix misspelt CalendarType (rt.cpan #56188)
+  * Add note about possible Exchange 2010 issues (rt.cpan #55890)
+  * Add note about missing RequestServerVersion Header (rt.cpan #61914)
+
 1.103610  2010-12-27 18:29:05 Europe/London
 
   * Port to Dist::Zilla
