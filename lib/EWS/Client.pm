@@ -112,8 +112,7 @@ methods exist to access the properties of each entry.
 =head2 EWS::Client->new( \%arguments )
 
 Instantiates a new EWS client. There won't be any connection to the server
-until you call one of the calendar or contacts retrieval methods. You will
-need HTTP Basic Access Auth enabled on the Exchange server to use this module.
+until you call one of the calendar or contacts retrieval methods.
 
 =over 4
 
@@ -131,6 +130,13 @@ value will be URI encoded by the module.
 The password of the account under which the module will connect to Exchange.
 This value will be URI encoded by the module. You can also provide the
 password via the C<EWS_PASS> environment variable.
+
+=item C<use_negotiated_auth> => True or False value
+
+The module will assume you wish to use HTTP Basic Access Auth, in which case
+you should enable that in your Exchange server. However for negotiated methods
+such as NTLM set this to a True value. For NTLM please also install the
+L<LWP::Authen::NTLM> module.
 
 =item C<schema_path> => String (optional)
 
@@ -188,3 +194,10 @@ Exchange server.
 =item * L<File::ShareDir>
 
 =back
+
+=head1 THANKS
+
+To Greg Shaw for sending patches for NTLM Authentication support and User
+Impersonation.
+
+=cut

@@ -6,6 +6,13 @@ use XML::Compile::SOAP11;
 use XML::Compile::Transport::SOAPHTTP;
 use File::ShareDir ();
 
+has use_negotiated_auth => (
+    is => 'ro',
+    isa => 'Any',
+    default => 0,
+    required => 0,
+);
+
 has transporter => (
     is => 'ro',
     isa => 'XML::Compile::Transport::SOAPHTTP',
@@ -14,9 +21,22 @@ has transporter => (
 
 sub _build_transporter {
     my $self = shift;
-    return XML::Compile::Transport::SOAPHTTP->new( address =>
-        sprintf 'https://%s:%s@%s/EWS/Exchange.asmx',
-            $self->username, $self->password, $self->server );
+    my $addr = $self->server . '/EWS/Exchange.asmx';
+
+    if (not $self->use_negotiated_auth) {
+        $addr = sprintf '%s:%s@%s',
+            $self->username, $self->password, $addr;
+    }
+
+    my $t = XML::Compile::Transport::SOAPHTTP->new(
+        address => 'https://'. $addr);
+    
+    if ($self->use_negotiated_auth) {
+        $t->userAgent->credentials($self->server.':443', '',
+            $self->username, $self->password);
+    }
+
+    return $t;
 }
 
 has wsdl => (
