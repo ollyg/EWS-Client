@@ -33,9 +33,16 @@ sub _list_contactitems {
 }
 
 sub _get_contacts {
-    my ($self, @account_id) = @_;
+    my ($self, $opts) = @_;
 
     return scalar $self->client->FindItem->(
+        (exists $opts->{impersonate} ? (
+            Impersonation => {
+                ConnectingSID => {
+                    PrimarySmtpAddress => $opts->{impersonate},
+                }
+            },
+        ) : ()),
         RequestVersion => {
             Version => $self->client->server_version,
         },
@@ -45,7 +52,11 @@ sub _get_contacts {
                 { DistinguishedFolderId =>
                     {
                         Id => 'contacts',
-                        @account_id, # optional
+                        (exists $opts->{email} ? (
+                            Mailbox => {
+                                EmailAddress => $opts->{email},
+                            },
+                        ) : ()), # optional
                     }
                 }
             ]
@@ -59,14 +70,15 @@ sub _get_contacts {
 sub retrieve {
     my ($self, $opts) = @_;
 
-    my $get_response = $self->_get_contacts(
-        (exists $opts->{email} ? (Mailbox => { EmailAddress => $opts->{email} }) : ())
-    );
+    my $get_response = $self->_get_contacts($opts);
 
     if (exists $get_response->{'ResponseCode'} and defined $get_response->{'ResponseCode'}
         and $get_response->{'ResponseCode'} eq 'ErrorNonPrimarySmtpAddress') {
 
-        $self->retrieve({email => $get_response->{'MessageXml'}->{'Value'}->{'_'}});
+        $self->retrieve({
+            %$opts,
+            email => $get_response->{'MessageXml'}->{'Value'}->{'_'},
+        });
     }
 
     $self->_check_for_errors('FindItem', $get_response);

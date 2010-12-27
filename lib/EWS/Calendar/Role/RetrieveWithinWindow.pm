@@ -34,9 +34,16 @@ sub _list_calendaritems {
 # Find list of items within the view, then Get details for each one
 # (item:Body is only available this way, it's not returned by FindItem)
 sub retrieve_within_window {
-    my ($self, $query) = @_;
+    my ($self, $opts) = @_;
 
     my $find_response = scalar $self->client->FindItem->(
+        (exists $opts->{impersonate} ? (
+            Impersonation => {
+                ConnectingSID => {
+                    PrimarySmtpAddress => $opts->{impersonate},
+                }
+            },
+        ) : ()),
         RequestVersion => {
             Version => $self->client->server_version,
         },
@@ -54,8 +61,8 @@ sub retrieve_within_window {
             ],
         },
         CalendarView => {
-            StartDate => $query->start->iso8601,
-            EndDate   => $query->end->iso8601,
+            StartDate => $opts->{window}->start->iso8601,
+            EndDate   => $opts->{window}->end->iso8601,
         },
     );
 
@@ -68,6 +75,13 @@ sub retrieve_within_window {
         if scalar @ids == 0;
 
     my $get_response = scalar $self->client->GetItem->(
+        (exists $opts->{impersonate} ? (
+            Impersonation => {
+                ConnectingSID => {
+                    PrimarySmtpAddress => $opts->{impersonate},
+                }
+            },
+        ) : ()),
         RequestVersion => {
             Version => $self->client->server_version,
         },

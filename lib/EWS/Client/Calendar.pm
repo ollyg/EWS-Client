@@ -93,6 +93,13 @@ returned results.
 Entries with a start date before this timestamp will be included in the
 results.
 
+=item C<impersonate> => String (optional)
+
+Passing the primary SMTP address of another account will retrieve the entries
+for that Exchange user instead, assuming you have sufficient rights to
+I<Impersonate> that account. If you do not have rights, an error will be
+thrown.
+
 =back
 
 The returned object contains the collection of calendar entries which matched

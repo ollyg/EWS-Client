@@ -5,9 +5,11 @@ with 'EWS::Calendar::Role::RetrieveWithinWindow';
 use EWS::Calendar::Window;
 
 sub retrieve {
-    my $self = shift;
-    my $window = EWS::Calendar::Window->new(@_);
-    return $self->retrieve_within_window($window);
+    my ($self, $opts) = @_;
+    return $self->retrieve_within_window({
+        window => EWS::Calendar::Window->new($opts),
+        %$opts,
+    });
 }
 
 no Moose::Role;
