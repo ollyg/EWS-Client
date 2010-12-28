@@ -1,6 +1,6 @@
 package EWS::Contacts::Role::Reader;
 BEGIN {
-  $EWS::Contacts::Role::Reader::VERSION = '1.103610';
+  $EWS::Contacts::Role::Reader::VERSION = '1.103620';
 }
 use Moose::Role;
 
@@ -36,16 +36,30 @@ sub _list_contactitems {
 }
 
 sub _get_contacts {
-    my ($self, @account_id) = @_;
+    my ($self, $opts) = @_;
 
     return scalar $self->client->FindItem->(
+        (exists $opts->{impersonate} ? (
+            Impersonation => {
+                ConnectingSID => {
+                    PrimarySmtpAddress => $opts->{impersonate},
+                }
+            },
+        ) : ()),
+        RequestVersion => {
+            Version => $self->client->server_version,
+        },
         ItemShape => { BaseShape => 'AllProperties' },
         ParentFolderIds => {
             cho_FolderId => [
                 { DistinguishedFolderId =>
                     {
                         Id => 'contacts',
-                        @account_id, # optional
+                        (exists $opts->{email} ? (
+                            Mailbox => {
+                                EmailAddress => $opts->{email},
+                            },
+                        ) : ()), # optional
                     }
                 }
             ]
@@ -59,14 +73,15 @@ sub _get_contacts {
 sub retrieve {
     my ($self, $opts) = @_;
 
-    my $get_response = $self->_get_contacts(
-        (exists $opts->{email} ? (Mailbox => { EmailAddress => $opts->{email} }) : ())
-    );
+    my $get_response = $self->_get_contacts($opts);
 
     if (exists $get_response->{'ResponseCode'} and defined $get_response->{'ResponseCode'}
         and $get_response->{'ResponseCode'} eq 'ErrorNonPrimarySmtpAddress') {
 
-        $self->retrieve({email => $get_response->{'MessageXml'}->{'Value'}->{'_'}});
+        $self->retrieve({
+            %$opts,
+            email => $get_response->{'MessageXml'}->{'Value'}->{'_'},
+        });
     }
 
     $self->_check_for_errors('FindItem', $get_response);
@@ -78,28 +93,3 @@ sub retrieve {
 
 no Moose::Role;
 1;
-
-__END__
-=pod
-
-=head1 NAME
-
-EWS::Contacts::Role::Reader
-
-=head1 VERSION
-
-version 1.103610
-
-=head1 AUTHOR
-
-Oliver Gorwits <oliver@cpan.org>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2010 by University of Oxford.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
-=cut
-

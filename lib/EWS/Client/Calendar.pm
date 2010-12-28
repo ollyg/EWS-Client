@@ -1,6 +1,6 @@
 package EWS::Client::Calendar;
 BEGIN {
-  $EWS::Client::Calendar::VERSION = '1.103610';
+  $EWS::Client::Calendar::VERSION = '1.103620';
 }
 use Moose;
 
@@ -30,7 +30,7 @@ EWS::Client::Calendar - Calendar Entries from Microsoft Exchange Server
 
 =head1 VERSION
 
-version 1.103610
+version 1.103620
 
 =head1 SYNOPSIS
 
@@ -107,6 +107,13 @@ returned results.
 
 Entries with a start date before this timestamp will be included in the
 results.
+
+=item C<impersonate> => String (optional)
+
+Passing the primary SMTP address of another account will retrieve the entries
+for that Exchange user instead, assuming you have sufficient rights to
+I<Impersonate> that account. If you do not have rights, an error will be
+thrown.
 
 =back
 

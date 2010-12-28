@@ -1,6 +1,6 @@
 package EWS::Client;
 BEGIN {
-  $EWS::Client::VERSION = '1.103610';
+  $EWS::Client::VERSION = '1.103620';
 }
 use Moose;
 
@@ -84,7 +84,7 @@ EWS::Client - Microsoft Exchange Web Services Client
 
 =head1 VERSION
 
-version 1.103610
+version 1.103620
 
 =head1 SYNOPSIS
 
@@ -127,8 +127,7 @@ methods exist to access the properties of each entry.
 =head2 EWS::Client->new( \%arguments )
 
 Instantiates a new EWS client. There won't be any connection to the server
-until you call one of the calendar or contacts retrieval methods. You will
-need HTTP Basic Access Auth enabled on the Exchange server to use this module.
+until you call one of the calendar or contacts retrieval methods.
 
 =over 4
 
@@ -147,11 +146,24 @@ The password of the account under which the module will connect to Exchange.
 This value will be URI encoded by the module. You can also provide the
 password via the C<EWS_PASS> environment variable.
 
+=item C<use_negotiated_auth> => True or False value
+
+The module will assume you wish to use HTTP Basic Access Auth, in which case
+you should enable that in your Exchange server. However for negotiated methods
+such as NTLM set this to a True value. For NTLM please also install the
+L<LWP::Authen::NTLM> module.
+
 =item C<schema_path> => String (optional)
 
 A folder on your file system which contains the WSDL and two further Schema
 files (messages, and types) which describe the Exchange 2007 Web Services SOAP
 API. They are shipped with this module so your providing this is optional.
+
+=item C<server_version> => String (optional)
+
+In each request to the server is specified the API version we expect to use.
+By default this is set to C<Exchange2007_SP1> but you have the opportunity to
+set it to C<Exchange2007> if you wish using this option.
 
 =back
 
@@ -167,12 +179,15 @@ Retrieves the L<EWS::Client::Contacts> object which allows retrieval of
 contact entries and their telephone numbers. See that linked manual page for
 more details.
 
-=head1 TODO
+=head1 KNOWN ISSUES
 
-There is currently no handling of time zone information whatsoever. I'm
-waiting for my timezone to shift to UTC+1 in March before working on this, as
-I don't really want to read the Exchange API docs. Patches are welcome if you
-want to help out.
+=over 4
+
+=item * No handling of time zone information, sorry.
+
+=item * The C<SOAPAction> Header might be wrong for Exchange 2010.
+
+=back
 
 =head1 REQUIREMENTS
 
@@ -195,6 +210,11 @@ want to help out.
 =item * L<File::ShareDir>
 
 =back
+
+=head1 THANKS
+
+To Greg Shaw for sending patches for NTLM Authentication support and User
+Impersonation.
 
 =head1 AUTHOR
 

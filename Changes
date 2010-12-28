@@ -1,3 +1,11 @@
+1.103620  2010-12-28 00:15:12 Europe/London
+
+  * Fix misspelt CalendarType (rt.cpan #56188)
+  * Add note about possible Exchange 2010 issues (rt.cpan #55890)
+  * Add server_version attribute (rt.cpan #61914)
+  * Add support for NTLM Authentication (rt.cpan #56189 - Greg Shaw)
+  * Add support for Impersonation (rt.cpan #56189 - Greg Shaw)
+
 1.103610  2010-12-27 18:29:05 Europe/London
 
   * Port to Dist::Zilla

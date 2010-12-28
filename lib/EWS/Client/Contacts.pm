@@ -1,6 +1,6 @@
 package EWS::Client::Contacts;
 BEGIN {
-  $EWS::Client::Contacts::VERSION = '1.103610';
+  $EWS::Client::Contacts::VERSION = '1.103620';
 }
 use Moose;
 
@@ -30,7 +30,7 @@ EWS::Client::Contacts - Contact Entries from Microsoft Exchange Server
 
 =head1 VERSION
 
-version 1.103610
+version 1.103620
 
 =head1 SYNOPSIS
 
@@ -87,23 +87,30 @@ reference.
 
 =head2 $contacts->retrieve( \%arguments )
 
-Query the Exchange server and retrieve contact entries. Pass the following
-arguments in a hash ref:
+Query the Exchange server and retrieve contact entries. By default the
+C<retrieve()> method will return contacts for the account under which you
+authenticated to the Exchange server (that is, the credentials passed to the
+L<EWS::Client> constructor). The following arguments will change this
+behaviour:
 
 =over 4
 
 =item C<email> => String (optional)
 
-By default the C<retrieve()> method will return contacts for the account under
-which you authenticated to the Exchange server (that is, the credentials
-passed to the L<EWS::Client> constructor).
-
 Passing the primary SMTP address of another account will retrieve the contacts
-for that Exchange user instead, assuming you have rights to see their
-contacts. If you do not have rights, an error will be thrown.
+for that Exchange user instead using the I<Delegation> feature, assuming you
+have rights to see their contacts (i.e. the user has shared their contacts).
+If you do not have rights, an error will be thrown.
 
 If you pass one of the account's secondary SMTP addresses this module
 I<should> be able to divine the primary SMTP address required.
+
+=item C<impersonate> => String (optional)
+
+Passing the primary SMTP address of another account will retrieve the contacts
+for that Exchange user instead, assuming you have sufficient rights to
+I<Impersonate> that account. If you do not have rights, an error will be
+thrown.
 
 =back
 

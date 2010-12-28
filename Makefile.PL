@@ -41,7 +41,7 @@ my %WriteMakefileArgs = (
     'XML::Compile::Transport::SOAPHTTP' => '0',
     'XML::Compile::WSDL11' => '0'
   },
-  'VERSION' => '1.103610',
+  'VERSION' => '1.103620',
   'test' => {
     'TESTS' => 't/*.t'
   }

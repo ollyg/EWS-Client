@@ -1,6 +1,6 @@
 package EWS::Calendar::Role::RetrieveWithinWindow;
 BEGIN {
-  $EWS::Calendar::Role::RetrieveWithinWindow::VERSION = '1.103610';
+  $EWS::Calendar::Role::RetrieveWithinWindow::VERSION = '1.103620';
 }
 use Moose::Role;
 
@@ -37,9 +37,19 @@ sub _list_calendaritems {
 # Find list of items within the view, then Get details for each one
 # (item:Body is only available this way, it's not returned by FindItem)
 sub retrieve_within_window {
-    my ($self, $query) = @_;
+    my ($self, $opts) = @_;
 
     my $find_response = scalar $self->client->FindItem->(
+        (exists $opts->{impersonate} ? (
+            Impersonation => {
+                ConnectingSID => {
+                    PrimarySmtpAddress => $opts->{impersonate},
+                }
+            },
+        ) : ()),
+        RequestVersion => {
+            Version => $self->client->server_version,
+        },
         Traversal => 'Shallow',
         ItemShape => {
             BaseShape => 'IdOnly',
@@ -54,8 +64,8 @@ sub retrieve_within_window {
             ],
         },
         CalendarView => {
-            StartDate => $query->start->iso8601,
-            EndDate   => $query->end->iso8601,
+            StartDate => $opts->{window}->start->iso8601,
+            EndDate   => $opts->{window}->end->iso8601,
         },
     );
 
@@ -68,6 +78,16 @@ sub retrieve_within_window {
         if scalar @ids == 0;
 
     my $get_response = scalar $self->client->GetItem->(
+        (exists $opts->{impersonate} ? (
+            Impersonation => {
+                ConnectingSID => {
+                    PrimarySmtpAddress => $opts->{impersonate},
+                }
+            },
+        ) : ()),
+        RequestVersion => {
+            Version => $self->client->server_version,
+        },
         ItemShape => {
             BaseShape => 'IdOnly',
             AdditionalProperties => {
@@ -112,29 +132,4 @@ sub retrieve_within_window {
 
 no Moose::Role;
 1;
-
-
-__END__
-=pod
-
-=head1 NAME
-
-EWS::Calendar::Role::RetrieveWithinWindow
-
-=head1 VERSION
-
-version 1.103610
-
-=head1 AUTHOR
-
-Oliver Gorwits <oliver@cpan.org>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2010 by University of Oxford.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
-=cut
 
