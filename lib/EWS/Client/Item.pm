@@ -14,12 +14,13 @@ use MIME::Base64;
 has ItemId => (
     is => 'ro',
     isa => 'HashRef[Str]',
+    traits => ['Hash'],
+    handles => {
+        Id => [ accessor => 'Id' ],
+        ChangeKey => [ accessor => 'ChangeKey' ],
+    },
     required => 1,
 );
-
-# some aliases for getting individual bits of the ItemId
-sub Id { (shift)->ItemId->Id };
-sub ChangeKey { (shift)->ItemId->ChangeKey };
 
 has ParentFolderId => (
     is => 'rw',
