@@ -5,6 +5,7 @@ BEGIN {
 use Moose;
 
 with 'EWS::Messages::Role::Sender';
+with 'EWS::Messages::Role::Reader';
 # could add future roles for updates, here
 
 has client => (
