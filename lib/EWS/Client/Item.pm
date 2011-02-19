@@ -25,20 +25,20 @@ has ItemId => (
 has ParentFolderId => (
     is => 'rw',
     isa => 'HashRef[Str]',
-    required => 1,
+    required => 0,
 );
 
 has ItemClass => (
     is => 'rw',
     isa => 'Str',
-    required => 1,
+    required => 0,
     default => 'IPM.Note',
 );
 
 has Subject => (
     is => 'rw',
     isa => 'Str',
-    required => 1,
+    required => 0,
 );
 
 has Sensitivity => (
@@ -51,6 +51,11 @@ has Sensitivity => (
 # created from MIME contents
 has MimeContent => (
     is => 'ro',
+    isa => 'Str',
+);
+
+has BodyType => (
+    is => 'rw',
     isa => 'Str',
 );
 
@@ -167,7 +172,10 @@ sub BUILDARGS {
     }
 
     # fish data out of deep structure
-    $params->{'Body'} = $params->{'Body'}->{'_'} if exists $params->{'Body'};
+    if (exists $params->{'Body'}) {
+        $params->{'BodyType'} = $params->{'Body'}->{'BodyType'};
+        $params->{'Body'} = $params->{'Body'}->{'_'};
+    }
     $params->{'MimeContent'} = decode_base64($params->{'MimeContent'}->{'_'})
         if exists $params->{'MimeContent'};
 
