@@ -14,12 +14,6 @@ has serialization_helper => (
     predicate => 'has_serialization_helper',
 );
 
-# if the attribute is an Arrayref[] type, it needs to have a singular_name
-has singular_name => (
-    is => 'rw',
-    isa => 'Str'
-);
-
 no Moose::Role;
 
 # Note: see http://docs.activestate.com/activeperl/5.12/lib/Moose/Cookbook/Meta/Recipe3.html
@@ -42,12 +36,24 @@ has SerializationItemName => (
     default => 'Item',
 );
 
+# arguments:
+#  attr_names: a optional list of attributes to serialize, they don't 
+#   necessarily need to implement the Serialized trait.  In the case 
+#   where no list is passed, all attributes implementing the Serialized trait
+#   are serialized
 sub serialize {
-    my ($self) = @_;
+    my ($self, $attr_names) = @_;
 
     my $result;
-    my @attributes = grep { $_->does('EWS::Client::Role::Trait::Serialized') }
-                          $self->meta->get_all_attributes();
+    my @attributes;
+
+    if (defined $attr_names) {
+        @attributes = map { $self->meta->find_attribute_by_name($_) }
+                            @$attr_names;
+    } else {
+        @attributes = grep { $_->does('EWS::Client::Role::Trait::Serialized') }
+                              $self->meta->get_all_attributes();
+    }
 
     # perform serialization on all of the attributes which have indicated that
     # they wish to be serialized (via a "Serialized" entry in their traits)
@@ -57,23 +63,17 @@ sub serialize {
         my $reader = $attribute->get_read_method;
         my $value = $self->$reader;
 
+        next if not defined $value;
+
         unless ($attribute->has_serialization_helper) {
             # default case is to just use the attribute name and value
-            if (ref $value eq 'ARRAY') {
-                my $arraykey = "cho_" . $attribute->singular_name;
-                $result->{$attribute->name} = { $arraykey => [ ] };
-                my $array = $result->{$attribute->name}->{$arraykey};
-
-                foreach my $item (@$value) {
-                    push(@$array, { $attribute->singular_name => $item });
-                }
-            } else {
-                $result->{$attribute->name} = $value;
-            }
+            $result->{$attribute->name} = $value;
         } else {
             # otherwise call the serialization helper function provided
-            $result->{$attribute->name} = 
-                $attribute->serialization_helper->($self, $value);
+            my $serialized_value = $attribute->serialization_helper->($self, $value);
+            next if not defined $serialized_value;
+
+            $result->{$attribute->name} = $serialized_value;
         }
     }
 

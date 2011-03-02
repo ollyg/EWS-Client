@@ -23,89 +23,63 @@ sub _check_for_errors {
     }
 }
 
-sub _create_address_struct {
-    my ($self, $addrs) = @_;
-
-    return undef if not defined $addrs;
-    $addrs = [ $addrs ] if ref $addrs ne 'ARRAY';
-
-    my $ret = { cho_Mailbox => [ ] };
-
-    foreach my $addr (@$addrs) {
-        my $mailbox = { Mailbox => { } };
-
-        if (ref $addr eq 'HASH') {
-
-        $mailbox->{Mailbox} = {
-                (exists $addr->{email_address} ? 
-                    ( EmailAddress => $addr->{email_address}, ) : ()),
-                (exists $addr->{name} ? 
-                    ( Name => $addr->{name}, ) : ()),
-            };
-        } else {
-            $mailbox->{Mailbox} = { EmailAddress => $addr };
-        }
-
-        push(@{$ret->{cho_Mailbox}}, $mailbox);
-    }
-
-    return $ret;
-}
-
-# Creates and sends an item.  Cannot send an existing item.
+# Creates and sends an item.  Cannot send an existing item (yet)
 # Options:
-#   to, cc, bcc, and reply_to all do the obvious things.  They can be an 
-#     individual string containing an email address, a hashref in the
-#     following structure 
-#        { name => 'display name', email_address => 'address' } 
-#     or a list of those elements.  Yes, reply_to can be a list.
-#   subject sets the subject of the message
-#   body is textual (sorry no formatting available right now) data that makes
-#     up the content of the message
 #   no_saved_copy => true causes the server to not put a copy of the message
 #     in your sent items folder
-#   importance, and sensitivity take the same range of values that outlook
-#     knows about
-#   read_receipt => true causes a read receipt to be requested
-#   delivery_receipt => true causes a delivery receipt to be requested
 sub send {
-    my ($self, $opts) = @_;
+    my ($self, $messages, $opts) = @_;
 
-    my $to_recipients = $self->_create_address_struct($opts->{to});
-    my $cc_recipients = $self->_create_address_struct($opts->{cc});
-    my $bcc_recipients = $self->_create_address_struct($opts->{bcc});
-    my $reply_to = $self->_create_address_struct($opts->{reply_to});
+    $messages = [ $messages ] unless ref $messages eq 'ARRAY';
 
-    my $create_response = $self->client->CreateItem->(
+    my $request = {
+        (exists $opts->{impersonate} ? (
+            Impersonation => {
+                ConnectingSID => {
+                    PrimarySmtpAddress => $opts->{impersonate},
+                }
+            },
+        ) : ()),
+        
         RequestVersion => {
             Version => $self->client->server_version,
         },
 
-        MessageDisposition => 
-            (exists $opts->{no_saved_copy} and $opts->{no_saved_copy} ? 
+        MessageDisposition => #"SaveOnly",
+            (exists $opts->{no_saved_copy} && $opts->{no_saved_copy} ? 
                 "SendOnly" : "SendAndSaveCopy"),
         Items => {
-            cho_Item => {
-                Message => {
-                    ToRecipients => $to_recipients,
-                    (defined $cc_recipients ? ( CcRecipients => $cc_recipients, ) : ()),
-                    (defined $bcc_recipients ? ( BccRecipients => $bcc_recipients, ) : ()),
-                    (defined $reply_to ? ( ReplyTo => $reply_to, ) : ()),
-                    (defined $opts->{importance} ? ( Importance => $opts->{importance}, ) : ()),
-                    (defined $opts->{sensitivity} ? ( Sensitivity => $opts->{sensitivity}, ) : ()),
-                    (defined $opts->{read_receipt} ? ( IsReadReceiptRequested => "true", ) : ()),
-                    (defined $opts->{delivery_receipt} ? ( IsDeliveryReceiptRequested => "true", ) : ()),
-                    Subject => $opts->{subject},
-                    Body => {
-                        BodyType => "Text",
-                        _ => $opts->{body},
-                    },
-                }
-            }
-        }
-    );
+            cho_Item => [ ]
+        },
+    };
 
+    # two different calls are required, CreateItem for new messages, and
+    # SendItem if the message already exists on the server (eg. in Drafts).
+    # The differentiating factor is the existence of an ItemId field
+    my (@to_create, @to_send);
+
+    foreach my $message (@$messages) {
+        if ($message->has_ItemId) {
+            push(@to_send, $message);
+        } else {
+            push(@to_create, $message);
+        }
+    }
+
+    foreach my $message (@to_create) {
+        push(@{$request->{Items}{cho_Item}}, $message->serialize());
+    }
+
+    my $create_response = $self->client->CreateItem->($request);
+    # XXX the error checking routines need to be significantly enhanced.
+    # Notably, they need to take into account the fact that creating one item
+    # may have failed where the rest of the creations succeeded, and they
+    # should expose all of the (gasp!) useful information that the errors
+    # provide
     $self->_check_for_errors('CreateItem', $create_response);
+
+    # XXX need to handle the already existing messages that languish in
+    # @to_send
 }
 
 no Moose::Role;
