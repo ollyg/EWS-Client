@@ -32,27 +32,6 @@ sub send {
 
     $messages = [ $messages ] unless ref $messages eq 'ARRAY';
 
-    my $request = {
-        (exists $opts->{impersonate} ? (
-            Impersonation => {
-                ConnectingSID => {
-                    PrimarySmtpAddress => $opts->{impersonate},
-                }
-            },
-        ) : ()),
-        
-        RequestVersion => {
-            Version => $self->client->server_version,
-        },
-
-        MessageDisposition => #"SaveOnly",
-            (exists $opts->{no_saved_copy} && $opts->{no_saved_copy} ? 
-                "SendOnly" : "SendAndSaveCopy"),
-        Items => {
-            cho_Item => [ ]
-        },
-    };
-
     # two different calls are required, CreateItem for new messages, and
     # SendItem if the message already exists on the server (eg. in Drafts).
     # The differentiating factor is the existence of an ItemId field
@@ -66,11 +45,15 @@ sub send {
         }
     }
 
-    foreach my $message (@to_create) {
-        push(@{$request->{Items}{cho_Item}}, $message->serialize());
-    }
+    my $create_response = $self->client->CreateItems(\@to_create, { 
+            (exists $opts->{impersonate} ? ( 
+                impersonate => $opts->{impersonate} 
+            ) : ()),
+            action => (exists $opts->{no_saved_copy} && $opts->{no_saved_copy} ? 
+                "SendOnly" : "SendAndSaveCopy"),
+        }
+    );
 
-    my $create_response = $self->client->CreateItem->($request);
     # XXX the error checking routines need to be significantly enhanced.
     # Notably, they need to take into account the fact that creating one item
     # may have failed where the rest of the creations succeeded, and they
