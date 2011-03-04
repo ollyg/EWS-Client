@@ -9,6 +9,7 @@ with qw/
     EWS::Client::Role::GetItem
     EWS::Client::Role::FindItem
     EWS::Client::Role::CreateItem
+    EWS::Client::Role::SendItem
 /;
 use EWS::Client::Contacts;
 use EWS::Client::Calendar;

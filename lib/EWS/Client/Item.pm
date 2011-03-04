@@ -25,7 +25,7 @@ use constant FIELDURI_NAMESPACE => 'item';
 # pieces (most notable the ID, beacuse the ChangeKey isn't really useful to
 # clients) should be accessed through their 'Id' and 'ChangeKey' aliases
 has ItemId => (
-    is => 'ro',
+    is => 'rw',
     isa => 'HashRef[Str]',
     traits => [qw(Hash Serialized)],
     handles => {

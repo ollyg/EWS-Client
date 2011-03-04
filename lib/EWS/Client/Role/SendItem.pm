@@ -1,29 +1,32 @@
-package EWS::Client::Role::CreateItem;
+package EWS::Client::Role::SendItem;
 BEGIN {
-  $EWS::Client::Role::CreateItem::VERSION = '1.103620';
+  $EWS::Client::Role::SendItem::VERSION = '1.103620';
 }
 use Moose::Role;
 
-has CreateItem => (
+has SendItem => (
     is => 'ro',
     isa => 'CodeRef',
     lazy_build => 1,
 );
 
-sub _build_CreateItem {
+sub _build_SendItem {
     my $self = shift;
     return $self->wsdl->compileClient(
-        operation => 'CreateItem',
+        operation => 'SendItem',
         transport => $self->transporter->compileClient(
-            action => 'http://schemas.microsoft.com/exchange/services/2006/messages/CreateItem' ),
+            action => 'http://schemas.microsoft.com/exchange/services/2006/messages/SendItem' ),
     );
 }
 
-sub CreateItems {
+sub SendItems {
     my ($self, $items, $opts) = @_;
 
     $items = [ $items ] unless ref $items eq 'ARRAY';
     return undef unless scalar @$items;
+
+    my $save = exists $opts->{save_items_to} && $opts->{save_items_to} ? 
+        "true" : "false";
 
     my $request = {
         (exists $opts->{impersonate} ? (
@@ -38,18 +41,20 @@ sub CreateItems {
             Version => $self->server_version,
         },
 
-        MessageDisposition => $opts->{action} || "SaveOnly",
-        SendMeetingInvitations => $opts->{meeting_invites} || "SendToNone",
+        SaveItemToFolder => $save,
+        ($save eq "true" && $opts->{save_items_to} ne "default" ? (
+            SavedItemFolderId => $opts->{save_items_to}
+        ) : ()),
 
         # XXX need to provide a facility to specify a target folder
 
-        Items => { },
+        ItemIds => { },
     };
 
     # plug in the serialized representations of the items to be created
-    $request->{Items}{cho_Item} = [ map { $_->serialize() } @$items ];
+    $request->{ItemIds}{cho_ItemId} = [ map { $_->serialize(['ItemId'], {as_fields => 1}) } @$items ];
 
-    return scalar $self->CreateItem->($request);
+    return scalar $self->SendItem->($request);
 }
 
 no Moose::Role;

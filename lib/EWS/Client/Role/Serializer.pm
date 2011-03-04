@@ -41,8 +41,11 @@ has SerializationItemName => (
 #   necessarily need to implement the Serialized trait.  In the case 
 #   where no list is passed, all attributes implementing the Serialized trait
 #   are serialized
+#  opts:
+#   as_fields => 1 causes the surrounding (eg. Message) tag to be omitted, so
+#   that special processing can be done on the list of values more easily
 sub serialize {
-    my ($self, $attr_names) = @_;
+    my ($self, $attr_names, $opts) = @_;
 
     my $result;
     my @attributes;
@@ -76,6 +79,11 @@ sub serialize {
             $result->{$attribute->name} = $serialized_value;
         }
     }
+
+    # if something special/strange needs to happen with these values, we can
+    # return just the list of values without the wraping object identification
+    # tag
+    return $result if exists $opts->{as_fields} and $opts->{as_fields};
 
     # finally, wrap the item in it's little hashref that tells EWS what type
     # of item it is.  This will be placed in an array of cho_BlahBlah
