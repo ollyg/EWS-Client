@@ -89,7 +89,7 @@ Then perform operations on the Exchange server:
 
  my $entries = $ews->calendar->retrieve({
      start => DateTime->now(),
-     end   => DateTime->now->add( month => 1 ),
+     end   => DateTime->now->add( months => 1 ),
  });
  
  print "I retrieved ". $entries->count ." items\n";
@@ -136,7 +136,7 @@ password via the C<EWS_PASS> environment variable.
 The module will assume you wish to use HTTP Basic Access Auth, in which case
 you should enable that in your Exchange server. However for negotiated methods
 such as NTLM set this to a True value. For NTLM please also install the
-L<LWP::Authen::NTLM> module.
+L<LWP::Authen::NTlm> module.
 
 =item C<schema_path> => String (optional)
 
