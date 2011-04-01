@@ -1,6 +1,6 @@
 package EWS::Client;
 BEGIN {
-  $EWS::Client::VERSION = '1.103620';
+  $EWS::Client::VERSION = '1.110910';
 }
 use Moose;
 
@@ -84,7 +84,7 @@ EWS::Client - Microsoft Exchange Web Services Client
 
 =head1 VERSION
 
-version 1.103620
+version 1.110910
 
 =head1 SYNOPSIS
 
@@ -104,7 +104,7 @@ Then perform operations on the Exchange server:
 
  my $entries = $ews->calendar->retrieve({
      start => DateTime->now(),
-     end   => DateTime->now->add( month => 1 ),
+     end   => DateTime->now->add( months => 1 ),
  });
  
  print "I retrieved ". $entries->count ." items\n";
@@ -151,7 +151,7 @@ password via the C<EWS_PASS> environment variable.
 The module will assume you wish to use HTTP Basic Access Auth, in which case
 you should enable that in your Exchange server. However for negotiated methods
 such as NTLM set this to a True value. For NTLM please also install the
-L<LWP::Authen::NTLM> module.
+L<LWP::Authen::NTlm> module.
 
 =item C<schema_path> => String (optional)
 
@@ -222,7 +222,7 @@ Oliver Gorwits <oliver@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by University of Oxford.
+This software is copyright (c) 2011 by University of Oxford.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

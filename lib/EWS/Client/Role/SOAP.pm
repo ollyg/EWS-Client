@@ -1,6 +1,6 @@
 package EWS::Client::Role::SOAP;
 BEGIN {
-  $EWS::Client::Role::SOAP::VERSION = '1.103620';
+  $EWS::Client::Role::SOAP::VERSION = '1.110910';
 }
 use Moose::Role;
 

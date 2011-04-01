@@ -2,7 +2,7 @@ NAME
     EWS::Client - Microsoft Exchange Web Services Client
 
 VERSION
-    version 1.103620
+    version 1.110910
 
 SYNOPSIS
     Set up your Exchange Web Services client. *You will need HTTP Basic
@@ -21,7 +21,7 @@ SYNOPSIS
 
      my $entries = $ews->calendar->retrieve({
          start => DateTime->now(),
-         end   => DateTime->now->add( month => 1 ),
+         end   => DateTime->now->add( months => 1 ),
      });
      
  print "I retrieved ". $entries->count ." items\n";
@@ -60,7 +60,7 @@ METHODS
         The module will assume you wish to use HTTP Basic Access Auth, in
         which case you should enable that in your Exchange server. However
         for negotiated methods such as NTLM set this to a True value. For
-        NTLM please also install the LWP::Authen::NTLM module.
+        NTLM please also install the LWP::Authen::NTlm module.
 
     "schema_path" => String (optional)
         A folder on your file system which contains the WSDL and two further
@@ -114,7 +114,7 @@ AUTHOR
     Oliver Gorwits <oliver@cpan.org>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2010 by University of Oxford.
+    This software is copyright (c) 2011 by University of Oxford.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.

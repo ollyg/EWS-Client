@@ -1,3 +1,7 @@
+1.110910  2011-04-01 14:27:58 Europe/London
+
+  * Fixed a couple of doc typos (jaybuff via github)
+
 1.103620  2010-12-28 00:15:12 Europe/London
 
   * Fix misspelt CalendarType (rt.cpan #56188)
