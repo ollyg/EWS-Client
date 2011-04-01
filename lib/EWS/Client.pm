@@ -136,7 +136,7 @@ password via the C<EWS_PASS> environment variable.
 The module will assume you wish to use HTTP Basic Access Auth, in which case
 you should enable that in your Exchange server. However for negotiated methods
 such as NTLM set this to a True value. For NTLM please also install the
-L<LWP::Authen::NTlm> module.
+L<LWP::Authen::Ntlm> module.
 
 =item C<schema_path> => String (optional)
 
