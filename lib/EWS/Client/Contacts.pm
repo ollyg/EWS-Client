@@ -1,6 +1,6 @@
 package EWS::Client::Contacts;
 BEGIN {
-  $EWS::Client::Contacts::VERSION = '1.110910';
+  $EWS::Client::Contacts::VERSION = '1.110911';
 }
 use Moose;
 
@@ -30,7 +30,7 @@ EWS::Client::Contacts - Contact Entries from Microsoft Exchange Server
 
 =head1 VERSION
 
-version 1.110910
+version 1.110911
 
 =head1 SYNOPSIS
 

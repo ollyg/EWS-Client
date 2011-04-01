@@ -1,6 +1,6 @@
 package EWS::Client::Role::GetItem;
 BEGIN {
-  $EWS::Client::Role::GetItem::VERSION = '1.110910';
+  $EWS::Client::Role::GetItem::VERSION = '1.110911';
 }
 use Moose::Role;
 

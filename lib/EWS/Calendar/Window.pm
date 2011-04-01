@@ -1,6 +1,6 @@
 package EWS::Calendar::Window;
 BEGIN {
-  $EWS::Calendar::Window::VERSION = '1.110910';
+  $EWS::Calendar::Window::VERSION = '1.110911';
 }
 use Moose;
 

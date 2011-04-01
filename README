@@ -2,7 +2,7 @@ NAME
     EWS::Client - Microsoft Exchange Web Services Client
 
 VERSION
-    version 1.110910
+    version 1.110911
 
 SYNOPSIS
     Set up your Exchange Web Services client. *You will need HTTP Basic
@@ -60,7 +60,7 @@ METHODS
         The module will assume you wish to use HTTP Basic Access Auth, in
         which case you should enable that in your Exchange server. However
         for negotiated methods such as NTLM set this to a True value. For
-        NTLM please also install the LWP::Authen::NTlm module.
+        NTLM please also install the LWP::Authen::Ntlm module.
 
     "schema_path" => String (optional)
         A folder on your file system which contains the WSDL and two further

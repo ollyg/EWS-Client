@@ -1,6 +1,6 @@
 package EWS::Client;
 BEGIN {
-  $EWS::Client::VERSION = '1.110910';
+  $EWS::Client::VERSION = '1.110911';
 }
 use Moose;
 
@@ -84,7 +84,7 @@ EWS::Client - Microsoft Exchange Web Services Client
 
 =head1 VERSION
 
-version 1.110910
+version 1.110911
 
 =head1 SYNOPSIS
 
@@ -151,7 +151,7 @@ password via the C<EWS_PASS> environment variable.
 The module will assume you wish to use HTTP Basic Access Auth, in which case
 you should enable that in your Exchange server. However for negotiated methods
 such as NTLM set this to a True value. For NTLM please also install the
-L<LWP::Authen::NTlm> module.
+L<LWP::Authen::Ntlm> module.
 
 =item C<schema_path> => String (optional)
 
