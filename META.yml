@@ -8,19 +8,21 @@ configure_requires:
   ExtUtils::MakeMaker: 6.31
   File::ShareDir::Install: 0.03
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.102400'
+generated_by: 'Dist::Zilla version 4.200000, CPAN::Meta::Converter version 2.110930001'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: EWS-Client
 requires:
+  Authen::NTLM: 0
   Carp: 0
   DateTime: 0
   DateTime::Format::ISO8601: 0
   Encode: 0
   File::ShareDir: 0
   HTML::Strip: 0
+  LWP::Authen::Ntlm: 0
   List::MoreUtils: 0
   Moose: 0
   Moose::Role: 0
@@ -34,4 +36,4 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=EWS-Client
   homepage: https://github.com/ollyg/EWS-Client/wiki
   repository: git://github.com/ollyg/EWS-Client.git
-version: 1.110911
+version: 1.111940

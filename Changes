@@ -1,3 +1,7 @@
+1.111940  2011-07-13 19:59:27 Europe/London
+
+  * Fixes for NTLM Authentication (code and docs)
+
 1.110911  2011-04-01 15:04:00 Europe/London
 
   * Apply the patch correctly this time.

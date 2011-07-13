@@ -25,12 +25,14 @@ my %WriteMakefileArgs = (
   'LICENSE' => 'perl',
   'NAME' => 'EWS::Client',
   'PREREQ_PM' => {
+    'Authen::NTLM' => '0',
     'Carp' => '0',
     'DateTime' => '0',
     'DateTime::Format::ISO8601' => '0',
     'Encode' => '0',
     'File::ShareDir' => '0',
     'HTML::Strip' => '0',
+    'LWP::Authen::Ntlm' => '0',
     'List::MoreUtils' => '0',
     'Moose' => '0',
     'Moose::Role' => '0',
@@ -41,7 +43,7 @@ my %WriteMakefileArgs = (
     'XML::Compile::Transport::SOAPHTTP' => '0',
     'XML::Compile::WSDL11' => '0'
   },
-  'VERSION' => '1.110911',
+  'VERSION' => '1.111940',
   'test' => {
     'TESTS' => 't/*.t'
   }

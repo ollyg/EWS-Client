@@ -1,6 +1,6 @@
 package EWS::Client;
 BEGIN {
-  $EWS::Client::VERSION = '1.110911';
+  $EWS::Client::VERSION = '1.111940';
 }
 use Moose;
 
@@ -14,13 +14,13 @@ use EWS::Client::Calendar;
 use URI::Escape ();
 
 has username => (
-    is => 'ro',
+    is => 'rw',
     isa => 'Str',
     required => 1,
 );
 
 has password => (
-    is => 'ro',
+    is => 'rw',
     isa => 'Str',
     required => 1,
 );
@@ -60,12 +60,28 @@ sub BUILDARGS {
     # collect EWS password from environment as last resort
     $params->{password} ||= $ENV{EWS_PASS};
 
-    # URI escape the username and password
-    $params->{username} ||= '';
-    $params->{username} = URI::Escape::uri_escape($params->{username});
-    $params->{password} = URI::Escape::uri_escape($params->{password});
-
     return $params;
+}
+
+sub BUILD {
+    my ($self, $params) = @_;
+
+    if ($self->use_negotiated_auth) {
+        die "please install LWP::Authen::Ntlm"
+            unless eval { require LWP::Authen::Ntlm && $LWP::Authen::Ntlm::VERSION };
+        die "please install Authen::NTLM"
+            unless eval { require Authen::NTLM && $Authen::NTLM::VERSION };
+
+        # change email style username to win-domain style
+        if ($self->username =~ m/(.+)@(.+)/) {
+            $self->username( $2 .'\\'. $1 );
+        }
+    }
+    else {
+        # URI escape the username and password
+        $self->password( URI::Escape::uri_escape($self->password) );
+        $self->username( URI::Escape::uri_escape($self->username) );
+    }
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -84,12 +100,11 @@ EWS::Client - Microsoft Exchange Web Services Client
 
 =head1 VERSION
 
-version 1.110911
+version 1.111940
 
 =head1 SYNOPSIS
 
-Set up your Exchange Web Services client. I<You will need HTTP Basic Access
-Auth enabled on the Exchange server to use this module>:
+Set up your Exchange Web Services client.
 
  use EWS::Client;
  use DateTime;
@@ -122,6 +137,24 @@ here you can access calendar and contact entries in a nicely abstracted
 fashion. Query results are generally available in an iterator and convenience
 methods exist to access the properties of each entry.
 
+=head1 AUTHENTICATION
+
+Depending on the configuration of the Microsoft Exchange server, you can use
+either HTTP Basic Access Auth, or NTLM Negotiated Auth, from this module. If
+using NTLM, the following additional Perl modules I<must> be installed:
+
+=over 4
+
+=item *
+
+LWP::Authen::Ntlm
+
+=item *
+
+Authen::NTLM (from Nick Bebout / Mark Bush)
+
+=back
+
 =head1 METHODS
 
 =head2 EWS::Client->new( \%arguments )
@@ -137,21 +170,26 @@ The host name of the Exchange server to which the module should connect.
 
 =item C<username> => String (required)
 
-The account username under which the module will connect to Exchange. This
-value will be URI encoded by the module.
+The account username under which the module will connect to Exchange.
+
+For Basic Access Auth this value will be URI encoded by the module, meaning
+you don't have to worry about escaping any special characters. For NTLM
+Negotiated Auth, pass a C<user@domain> format username and it will
+automatically be converted into Windows' C<domain\user> format for you.
 
 =item C<password> => String OR via C<$ENV{EWS_PASS}> (required)
 
 The password of the account under which the module will connect to Exchange.
-This value will be URI encoded by the module. You can also provide the
-password via the C<EWS_PASS> environment variable.
+
+For Basic Access Auth this value will be URI encoded by the module. You can
+also provide the password via the C<EWS_PASS> environment variable.
 
 =item C<use_negotiated_auth> => True or False value
 
 The module will assume you wish to use HTTP Basic Access Auth, in which case
 you should enable that in your Exchange server. However for negotiated methods
 such as NTLM set this to a True value. For NTLM please also install the
-L<LWP::Authen::Ntlm> module.
+required Perl modules as listed above under L</AUTHENTICATION>.
 
 =item C<schema_path> => String (optional)
 

@@ -2,16 +2,15 @@ NAME
     EWS::Client - Microsoft Exchange Web Services Client
 
 VERSION
-    version 1.110911
+    version 1.111940
 
 SYNOPSIS
-    Set up your Exchange Web Services client. *You will need HTTP Basic
-    Access Auth enabled on the Exchange server to use this module*:
+    Set up your Exchange Web Services client.
 
      use EWS::Client;
      use DateTime;
-     
- my $ews = EWS::Client->new({
+ 
+     my $ews = EWS::Client->new({
          server      => 'exchangeserver.example.com',
          username    => 'oliver',
          password    => 's3krit', # or set in $ENV{EWS_PASS}
@@ -23,20 +22,30 @@ SYNOPSIS
          start => DateTime->now(),
          end   => DateTime->now->add( months => 1 ),
      });
-     
- print "I retrieved ". $entries->count ." items\n";
-     
- while ($entries->has_next) {
+ 
+     print "I retrieved ". $entries->count ." items\n";
+ 
+     while ($entries->has_next) {
          print $entries->next->Subject, "\n";
      }
-     
- my $contacts = $ews->contacts->retrieve;
+ 
+     my $contacts = $ews->contacts->retrieve;
 
 DESCRIPTION
     This module acts as a client to the Microsoft Exchange Web Services API.
     From here you can access calendar and contact entries in a nicely
     abstracted fashion. Query results are generally available in an iterator
     and convenience methods exist to access the properties of each entry.
+
+AUTHENTICATION
+    Depending on the configuration of the Microsoft Exchange server, you can
+    use either HTTP Basic Access Auth, or NTLM Negotiated Auth, from this
+    module. If using NTLM, the following additional Perl modules *must* be
+    installed:
+
+    *   LWP::Authen::Ntlm
+
+    *   Authen::NTLM (from Nick Bebout / Mark Bush)
 
 METHODS
   EWS::Client->new( \%arguments )
@@ -49,18 +58,28 @@ METHODS
 
     "username" => String (required)
         The account username under which the module will connect to
-        Exchange. This value will be URI encoded by the module.
+        Exchange.
+
+        For Basic Access Auth this value will be URI encoded by the module,
+        meaning you don't have to worry about escaping any special
+        characters. For NTLM Negotiated Auth, pass a "user@domain" format
+        username and it will automatically be converted into Windows'
+        "domain\user" format for you.
 
     "password" => String OR via $ENV{EWS_PASS} (required)
         The password of the account under which the module will connect to
-        Exchange. This value will be URI encoded by the module. You can also
-        provide the password via the "EWS_PASS" environment variable.
+        Exchange.
+
+        For Basic Access Auth this value will be URI encoded by the module.
+        You can also provide the password via the "EWS_PASS" environment
+        variable.
 
     "use_negotiated_auth" => True or False value
         The module will assume you wish to use HTTP Basic Access Auth, in
         which case you should enable that in your Exchange server. However
         for negotiated methods such as NTLM set this to a True value. For
-        NTLM please also install the LWP::Authen::Ntlm module.
+        NTLM please also install the required Perl modules as listed above
+        under "AUTHENTICATION".
 
     "schema_path" => String (optional)
         A folder on your file system which contains the WSDL and two further
