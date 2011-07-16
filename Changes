@@ -1,3 +1,7 @@
+1.111970  2011-07-16 17:19:24 Europe/London
+
+  * Use different Dist::Zilla author bundle
+
 1.111940  2011-07-13 19:59:27 Europe/London
 
   * Fixes for NTLM Authentication (code and docs)

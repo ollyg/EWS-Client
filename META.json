@@ -4,7 +4,7 @@
       "Oliver Gorwits <oliver@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.200000, CPAN::Meta::Converter version 2.110930001",
+   "generated_by" : "Dist::Zilla version 4.200011, CPAN::Meta::Converter version 2.110930001",
    "license" : [
       "perl_5"
    ],
@@ -16,20 +16,18 @@
    "prereqs" : {
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.31",
+            "ExtUtils::MakeMaker" : "6.30",
             "File::ShareDir::Install" : "0.03"
          }
       },
       "runtime" : {
          "requires" : {
-            "Authen::NTLM" : 0,
             "Carp" : 0,
             "DateTime" : 0,
             "DateTime::Format::ISO8601" : 0,
             "Encode" : 0,
             "File::ShareDir" : 0,
             "HTML::Strip" : 0,
-            "LWP::Authen::Ntlm" : 0,
             "List::MoreUtils" : 0,
             "Moose" : 0,
             "Moose::Role" : 0,
@@ -59,6 +57,6 @@
          "web" : "https://github.com/ollyg/EWS-Client"
       }
    },
-   "version" : "1.111940"
+   "version" : "1.111970"
 }
 

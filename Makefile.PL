@@ -4,7 +4,7 @@ use warnings;
 
 
 
-use ExtUtils::MakeMaker 6.31;
+use ExtUtils::MakeMaker 6.30;
 
 use File::ShareDir::Install;
 install_share dist => "share";
@@ -17,7 +17,7 @@ my %WriteMakefileArgs = (
     'Test::More' => '0'
   },
   'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.31',
+    'ExtUtils::MakeMaker' => '6.30',
     'File::ShareDir::Install' => '0.03'
   },
   'DISTNAME' => 'EWS-Client',
@@ -25,14 +25,12 @@ my %WriteMakefileArgs = (
   'LICENSE' => 'perl',
   'NAME' => 'EWS::Client',
   'PREREQ_PM' => {
-    'Authen::NTLM' => '0',
     'Carp' => '0',
     'DateTime' => '0',
     'DateTime::Format::ISO8601' => '0',
     'Encode' => '0',
     'File::ShareDir' => '0',
     'HTML::Strip' => '0',
-    'LWP::Authen::Ntlm' => '0',
     'List::MoreUtils' => '0',
     'Moose' => '0',
     'Moose::Role' => '0',
@@ -43,7 +41,7 @@ my %WriteMakefileArgs = (
     'XML::Compile::Transport::SOAPHTTP' => '0',
     'XML::Compile::WSDL11' => '0'
   },
-  'VERSION' => '1.111940',
+  'VERSION' => '1.111970',
   'test' => {
     'TESTS' => 't/*.t'
   }
