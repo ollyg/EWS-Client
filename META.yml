@@ -2,7 +2,8 @@
 abstract: 'Microsoft Exchange Web Services Client'
 author:
   - 'Oliver Gorwits <oliver@cpan.org>'
-build_requires: {}
+build_requires:
+  Test::More: 0
 configure_requires:
   ExtUtils::MakeMaker: 6.30
   File::ShareDir::Install: 0.03
@@ -15,10 +16,25 @@ meta-spec:
 name: EWS-Client
 requires:
   Authen::NTLM: 0
+  Carp: 0
+  DateTime: 0
+  DateTime::Format::ISO8601: 0
+  Encode: 0
+  File::ShareDir: 0
+  HTML::Strip: 0
   LWP::Authen::Ntlm: 0
   LWP::Protocol::https: 6.02
+  List::MoreUtils: 0
+  Moose: 0
+  Moose::Role: 0
+  Moose::Util::TypeConstraints: 0
+  MooseX::Iterator: 0
+  URI::Escape: 0
+  XML::Compile::SOAP11: 0
+  XML::Compile::Transport::SOAPHTTP: 0
+  XML::Compile::WSDL11: 0
 resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=EWS-Client
   homepage: https://github.com/ollyg/EWS-Client/wiki
   repository: git://github.com/ollyg/EWS-Client.git
-version: 1.111981
+version: 1.111982
