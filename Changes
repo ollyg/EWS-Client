@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.111981  2011-07-17 13:18:50 Europe/London
+
   * Add dependencies for HTTPS and NTLM support, always
   * Added example script
 
