@@ -1,6 +1,6 @@
 package EWS::Client::Calendar;
 BEGIN {
-  $EWS::Client::Calendar::VERSION = '1.111970';
+  $EWS::Client::Calendar::VERSION = '1.111981';
 }
 use Moose;
 
@@ -30,7 +30,7 @@ EWS::Client::Calendar - Calendar Entries from Microsoft Exchange Server
 
 =head1 VERSION
 
-version 1.111970
+version 1.111981
 
 =head1 SYNOPSIS
 

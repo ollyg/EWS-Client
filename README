@@ -2,7 +2,7 @@ NAME
     EWS::Client - Microsoft Exchange Web Services Client
 
 VERSION
-    version 1.111970
+    version 1.111981
 
 SYNOPSIS
     Set up your Exchange Web Services client.
@@ -40,12 +40,10 @@ DESCRIPTION
 AUTHENTICATION
     Depending on the configuration of the Microsoft Exchange server, you can
     use either HTTP Basic Access Auth, or NTLM Negotiated Auth, from this
-    module. If using NTLM, the following additional Perl modules *must* be
-    installed:
+    module. The default is HTTP Basic Access Auth, so if using NTLM, the
+    following additional option to "new()" is required:
 
-    *   LWP::Authen::Ntlm
-
-    *   Authen::NTLM (from Nick Bebout / Mark Bush)
+     use_negotiated_auth => 1,
 
 METHODS
   EWS::Client->new( \%arguments )
@@ -77,9 +75,7 @@ METHODS
     "use_negotiated_auth" => True or False value
         The module will assume you wish to use HTTP Basic Access Auth, in
         which case you should enable that in your Exchange server. However
-        for negotiated methods such as NTLM set this to a True value. For
-        NTLM please also install the required Perl modules as listed above
-        under "AUTHENTICATION".
+        for negotiated methods such as NTLM set this to a True value.
 
     "schema_path" => String (optional)
         A folder on your file system which contains the WSDL and two further
@@ -107,23 +103,6 @@ KNOWN ISSUES
     *   No handling of time zone information, sorry.
 
     *   The "SOAPAction" Header might be wrong for Exchange 2010.
-
-REQUIREMENTS
-    *   Moose
-
-    *   MooseX::Iterator
-
-    *   XML::Compile::SOAP
-
-    *   DateTime
-
-    *   DateTime::Format::ISO8601
-
-    *   HTML::Strip
-
-    *   URI::Escape
-
-    *   File::ShareDir
 
 THANKS
     To Greg Shaw for sending patches for NTLM Authentication support and

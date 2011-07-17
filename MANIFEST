@@ -5,6 +5,7 @@ META.json
 META.yml
 Makefile.PL
 README
+examples/demo.pl
 lib/EWS/Calendar/Item.pm
 lib/EWS/Calendar/ResultSet.pm
 lib/EWS/Calendar/Role/Reader.pm
