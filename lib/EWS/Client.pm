@@ -125,20 +125,11 @@ methods exist to access the properties of each entry.
 =head1 AUTHENTICATION
 
 Depending on the configuration of the Microsoft Exchange server, you can use
-either HTTP Basic Access Auth, or NTLM Negotiated Auth, from this module. If
-using NTLM, the following additional Perl modules I<must> be installed:
+either HTTP Basic Access Auth, or NTLM Negotiated Auth, from this module. The
+default is HTTP Basic Access Auth, so if using NTLM, the following additional
+option to C<new()> is required:
 
-=over 4
-
-=item *
-
-LWP::Authen::Ntlm
-
-=item *
-
-Authen::NTLM (from Nick Bebout / Mark Bush)
-
-=back
+ use_negotiated_auth => 1,
 
 =head1 METHODS
 
@@ -173,8 +164,7 @@ also provide the password via the C<EWS_PASS> environment variable.
 
 The module will assume you wish to use HTTP Basic Access Auth, in which case
 you should enable that in your Exchange server. However for negotiated methods
-such as NTLM set this to a True value. For NTLM please also install the
-required Perl modules as listed above under L</AUTHENTICATION>.
+such as NTLM set this to a True value.
 
 =item C<schema_path> => String (optional)
 
@@ -209,28 +199,6 @@ more details.
 =item * No handling of time zone information, sorry.
 
 =item * The C<SOAPAction> Header might be wrong for Exchange 2010.
-
-=back
-
-=head1 REQUIREMENTS
-
-=over 4
-
-=item * L<Moose>
-
-=item * L<MooseX::Iterator>
-
-=item * L<XML::Compile::SOAP>
-
-=item * L<DateTime>
-
-=item * L<DateTime::Format::ISO8601>
-
-=item * L<HTML::Strip>
-
-=item * L<URI::Escape>
-
-=item * L<File::ShareDir>
 
 =back
 
