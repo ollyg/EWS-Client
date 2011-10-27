@@ -34,7 +34,6 @@ my %WriteMakefileArgs = (
     'HTML::Strip' => '0',
     'LWP::Authen::Ntlm' => '0',
     'LWP::Protocol::https' => '6.02',
-    'List::MoreUtils' => '0',
     'Moose' => '0',
     'Moose::Role' => '0',
     'Moose::Util::TypeConstraints' => '0',
@@ -44,7 +43,7 @@ my %WriteMakefileArgs = (
     'XML::Compile::Transport::SOAPHTTP' => '0',
     'XML::Compile::WSDL11' => '0'
   },
-  'VERSION' => '1.111982',
+  'VERSION' => '1.113000',
   'test' => {
     'TESTS' => 't/*.t'
   }

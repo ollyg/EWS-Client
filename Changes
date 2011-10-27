@@ -1,3 +1,7 @@
+1.113000  2011-10-27 19:47:48 Europe/London
+
+  * No longer attempt naive interpretation of Phone Numbers (M. Redinger)
+
 1.111982  2011-07-17 16:48:37 Europe/London
 
   * Need to re-release to fix botched deps

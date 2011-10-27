@@ -1,6 +1,6 @@
 package EWS::Client::Role::FindItem;
 BEGIN {
-  $EWS::Client::Role::FindItem::VERSION = '1.111982';
+  $EWS::Client::Role::FindItem::VERSION = '1.113000';
 }
 use Moose::Role;
 
