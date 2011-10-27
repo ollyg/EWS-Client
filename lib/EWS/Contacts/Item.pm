@@ -1,7 +1,6 @@
 package EWS::Contacts::Item;
 use Moose;
 
-use List::MoreUtils 'uniq';
 use Encode;
 
 has DisplayName => (
@@ -47,21 +46,11 @@ sub _build_PhoneNumbers {
         $type =~ s/(\w)([A-Z0-9])/$1 $2/g; # BusinessPhone -> Business Phone
 
         # get numbers and set mapping to this name, but skip blanks
-        my @numbers = map {(defined and length) ? $_ : ()} 
-                      _parse_phone_number($entry->{'_'});
-        next if scalar @numbers == 0;
-
-        push @{ $entries->{$type} }, @numbers;
+        next unless $entry->{'_'};
+        push @{ $entries->{$type} }, $entry->{'_'};
     }
 
     return $entries;
-}
-
-sub _parse_phone_number {
-    my $number = shift; 
-    $number =~ s/\s+//g;
-    return uniq split m/\D/, $number;
-        # we don't sort this list, because the field content may be ordered
 }
 
 __PACKAGE__->meta->make_immutable;

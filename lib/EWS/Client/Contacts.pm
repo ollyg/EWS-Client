@@ -156,9 +156,15 @@ types, such as Mobile Phone, Business Line, and so on. Each of these may in
 turn store a free text field so people often put multiple numbers in,
 separated by a delimiter.
 
+As a result of this freedom, this module makes no effort to interpret the
+content of the number fields, only to retrieve them. It's assumed you are
+familiar with your own number storage conventions, or can use a module such
+as L<Number::Phone::Normalize> to parse the result.
+
 In this property you'll find a hash ref of all this data, with keys being the
-number types (Mobile Phone, etc), and values being array refs of numbers. The
-module splits up number lists but preserves their order. For example:
+number types (Mobile Phone, etc), and values being array refs of I<data>. As
+explained above, the data might be single numbers or free text with several
+telephone numbers that you will need to parse yourself. For example:
 
  my $numbers = $entry->PhoneNumbers;
  
@@ -172,18 +178,13 @@ module splits up number lists but preserves their order. For example:
  
  # might print something like:
  
- Oliver Gorwits : 73244
- John Smith : 88888
-
-In the future this format may change, or may migrate into an object based
-storage.
+ Mobile Phone : 73244
+ Business Line : 88888
 
 =head1 TODO
 
 There should be more properties imported than just the DisplayName and
 PhoneNumbers.
-
-PhoneNumbers will maybe migrate into some kind of object based storage.
 
 =head1 SEE ALSO
 
