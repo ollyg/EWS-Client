@@ -8,9 +8,12 @@ with qw/
     EWS::Client::Role::SOAP
     EWS::Client::Role::GetItem
     EWS::Client::Role::FindItem
+    EWS::Client::Role::CreateItem
+    EWS::Client::Role::SendItem
 /;
 use EWS::Client::Contacts;
 use EWS::Client::Calendar;
+use EWS::Client::Messages;
 use URI::Escape ();
 
 has username => (
@@ -51,6 +54,17 @@ has calendar => (
 sub _build_calendar {
     my $self = shift;
     return EWS::Client::Calendar->new({ client => $self });
+}
+
+has messages => (
+    is => 'ro',
+    isa => 'EWS::Client::Messages',
+    lazy_build => 1,
+);
+
+sub _build_messages {
+    my $self = shift;
+    return EWS::Client::Messages->new({ client => $self });
 }
 
 sub BUILDARGS {
