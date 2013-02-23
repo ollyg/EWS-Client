@@ -1,6 +1,6 @@
 package EWS::Client::Contacts;
 BEGIN {
-  $EWS::Client::Contacts::VERSION = '1.130540_001';
+  $EWS::Client::Contacts::VERSION = '1.130540_002';
 }
 use Moose;
 
@@ -30,7 +30,7 @@ EWS::Client::Contacts - Contact Entries from Microsoft Exchange Server
 
 =head1 VERSION
 
-version 1.130540_001
+version 1.130540_002
 
 =head1 SYNOPSIS
 
@@ -162,6 +162,18 @@ server query. They are each objects of type C<EWS::Contacts::Item>.
 The field you should use to describe this entry, being probably the person or
 business's name.
 
+=head2 $item->JobTitle
+
+The Job Title field of the contact.
+
+=head2 $item->CompanyName
+
+The Comany Name field of the contact.
+
+=head2 $item->BusinessHomePage
+
+The Business Home Page field within the contact.
+
 =head2 $item->PhoneNumbers
 
 This property comprises all the phone numbers associated with the contact.
@@ -196,10 +208,23 @@ telephone numbers that you will need to parse yourself. For example:
  Mobile Phone : 73244
  Business Line : 88888
 
-=head1 TODO
+=head2 $item->EmailAddresses
 
-There should be more properties imported than just the DisplayName and
-PhoneNumbers.
+This property comprises all the email addresses associated with the contact.
+
+Similar to the C<PhoneNumbers> property, this is a hash ref of all data, with
+keys being the email address type and values being array refs of I<data>.
+
+See C<PhoneNumbers>, above for an example of how to process this property.
+
+=head2 $item->PhysicalAddresses
+
+This property comprises all the physical addresses associated with the
+contact.
+
+Again, like the C<PhoneNumbers> and C<EmailAddresses> properties, this is a
+hash ref of array refs, where the hash keys are address identifiers, and the
+values are lists of addresses.
 
 =head1 SEE ALSO
 

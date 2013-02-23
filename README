@@ -2,7 +2,7 @@ NAME
     EWS::Client - Microsoft Exchange Web Services Client
 
 VERSION
-    version 1.130540_001
+    version 1.130540_002
 
 SYNOPSIS
     Set up your Exchange Web Services client.
