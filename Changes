@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+  * Docs for new properties.
+
 1.130540_001 2013-02-23 16:05:31 Europe/London
 
   * Add JobTitle, CompanyName, BusinessHomePage, EmailAddresses, and PhysicalAddresses
