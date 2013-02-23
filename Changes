@@ -1,3 +1,8 @@
+1.130540_001 2013-02-23 16:05:31 Europe/London
+
+  * Add JobTitle, CompanyName, BusinessHomePage, EmailAddresses, and PhysicalAddresses
+    (Ron Tomassini)
+
 1.113000  2011-10-27 19:47:48 Europe/London
 
   * No longer attempt naive interpretation of Phone Numbers (M. Redinger)
