@@ -1,6 +1,6 @@
 package EWS::Client;
 BEGIN {
-  $EWS::Client::VERSION = '1.130540_002';
+  $EWS::Client::VERSION = '1.130570';
 }
 use Moose;
 
@@ -100,7 +100,7 @@ EWS::Client - Microsoft Exchange Web Services Client
 
 =head1 VERSION
 
-version 1.130540_002
+version 1.130570
 
 =head1 SYNOPSIS
 
