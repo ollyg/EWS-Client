@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.131710_001 2013-06-20 23:07:20 Europe/London
+
   * Retrieval of mailbox folder entries and their sizes (G. Shaw)
   * Calendar invitees will show name and routing in addition to email address (G. Shaw)
 
