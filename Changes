@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+  * Retrieval of mailbox folder entries and their sizes (G. Shaw)
+  * Calendar invitees will show name and routing in addition to email address (G. Shaw)
+
 1.130570  2013-02-26 20:15:48 Europe/London
 
   * Next stable release.

@@ -1,14 +1,21 @@
 package EWS::Client;
+BEGIN {
+  $EWS::Client::VERSION = '1.130570';
+}
 use Moose;
 
 with qw/
     EWS::Client::Role::SOAP
     EWS::Client::Role::GetItem
     EWS::Client::Role::FindItem
+    EWS::Client::Role::FindFolder
+    EWS::Client::Role::GetFolder
 /;
 use EWS::Client::Contacts;
 use EWS::Client::Calendar;
+use EWS::Client::Folder;
 use URI::Escape ();
+use Log::Report;
 
 has username => (
     is => 'rw',
@@ -49,6 +56,18 @@ sub _build_calendar {
     my $self = shift;
     return EWS::Client::Calendar->new({ client => $self });
 }
+
+has folders => (
+    is => 'ro',
+    isa => 'EWS::Client::Folder',
+    lazy_build => 1,
+);
+
+sub _build_folders {
+    my $self = shift;
+    return EWS::Client::Folder->new({ client => $self });
+}
+
 
 sub BUILDARGS {
     my ($class, @rest) = @_;
@@ -190,6 +209,12 @@ manual page for more details.
 
 Retrieves the L<EWS::Client::Contacts> object which allows retrieval of
 contact entries and their telephone numbers. See that linked manual page for
+more details.
+
+=head2 $ews->folders()
+
+Retrieves the L<EWS::Client::Folder> object which allows retrieval of
+mailbox folder entries and their sizes. See that linked manual page for
 more details.
 
 =head1 KNOWN ISSUES
