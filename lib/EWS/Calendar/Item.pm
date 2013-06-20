@@ -1,6 +1,6 @@
 package EWS::Calendar::Item;
 BEGIN {
-  $EWS::Calendar::Item::VERSION = '1.130570';
+  $EWS::Calendar::Item::VERSION = '1.131710_001';
 }
 use Moose;
 
@@ -9,6 +9,7 @@ use DateTime::Format::ISO8601;
 use DateTime;
 use HTML::Strip;
 use Encode;
+use EWS::Calendar::Mailbox;
 
 has Start => (
     is => 'ro',
@@ -102,7 +103,7 @@ sub has_DisplayTo { return scalar @{(shift)->DisplayTo} }
 
 has Organizer => (
     is => 'ro',
-    isa => 'Str',
+    isa => 'EWS::Calendar::Mailbox',
     required => 1,
 );
 
@@ -119,13 +120,13 @@ sub _build_IsCancelled {
 
 has AppointmentState => (
     is => 'ro',
-    isa => 'Int', # bool
+    isa => 'Str', # bool - Was 'Int' but failed type constraint on 2012-06-20
     required => 1,
 );
 
 has LegacyFreeBusyStatus => (
     is => 'ro',
-    isa => enum([qw/Free Tentative Busy OOF NoData/]),
+    isa => 'Str',	# Was enum([qw/Free Tentative Busy OOF NoData/]),
     required => 0,
     default => 'NoData',
 );
@@ -145,6 +146,37 @@ has IsAllDayEvent => (
     default => 0,
 );
 
+has Sensitivity => (
+    is => 'ro',
+    isa => enum([qw/Normal Personal Private Confidential/]),
+    required => 1,
+);
+
+has RequiredAttendees => (
+    is => 'ro',
+    isa => 'ArrayRef[EWS::Calendar::Mailbox]',
+    required => 0,
+);
+
+has Duration => (
+    is => 'ro',
+    isa => 'Str',
+    required => 1,
+);
+
+has OptionalAttendees => (
+    is => 'ro',
+    isa => 'ArrayRef[EWS::Calendar::Mailbox]',
+    required => 0,
+);
+
+has UID => (
+    is => 'ro',
+    isa => 'Str',
+    required => 0,
+    default => '',
+);
+
 sub BUILDARGS {
     my ($class, @rest) = @_;
     my $params = (scalar @rest == 1 ? $rest[0] : {@rest});
@@ -154,11 +186,15 @@ sub BUILDARGS {
     $params->{'End'}   = DateTime::Format::ISO8601->parse_datetime($params->{'End'});
 
     # fish data out of deep structure
-    $params->{'Organizer'} = $params->{'Organizer'}->{'Mailbox'}->{'Name'};
+    $params->{'Organizer'} = EWS::Calendar::Mailbox->new($params->{'Organizer'}->{'Mailbox'});
+    $params->{'OptionalAttendees'} = [ map { EWS::Calendar::Mailbox->new($_->{'Mailbox'}) }
+					@{$params->{'OptionalAttendees'}->{Attendee}} ];
+    $params->{'RequiredAttendees'} = [ map { EWS::Calendar::Mailbox->new($_->{'Mailbox'}) }
+					@{$params->{'RequiredAttendees'}->{Attendee}} ];
     $params->{'Body'} = $params->{'Body'}->{'_'};
 
     # rework semicolon separated list into array, and also remove Organizer
-    $params->{'DisplayTo'} = [ grep {$_ ne $params->{'Organizer'}}
+    $params->{'DisplayTo'} = [ grep {$_ ne $params->{'Organizer'}->{'Name'}}
                                     split m/; /, $params->{'DisplayTo'} ];
 
     # set Perl's encoding flag on all data coming from Exchange
@@ -166,7 +202,10 @@ sub BUILDARGS {
     my $hs = HTML::Strip->new(emit_spaces => 0);
 
     foreach my $key (keys %$params) {
-        if (ref $params->{$key} eq 'ARRAY') {
+        if ( $key =~ /RequiredAttendees|OptionalAttendees|IsDraft|IsAllDayEvent/ ) {
+            next;
+        }
+        elsif (ref $params->{$key} eq 'ARRAY') {
             $params->{$key} = [
                 map {$hs->parse($_)}
                 map {Encode::encode('utf8', $_)}

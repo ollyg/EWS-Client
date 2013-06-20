@@ -2,7 +2,7 @@ NAME
     EWS::Client - Microsoft Exchange Web Services Client
 
 VERSION
-    version 1.130570
+    version 1.131710_001
 
 SYNOPSIS
     Set up your Exchange Web Services client.
@@ -98,6 +98,11 @@ METHODS
     Retrieves the EWS::Client::Contacts object which allows retrieval of
     contact entries and their telephone numbers. See that linked manual page
     for more details.
+
+  $ews->folders()
+    Retrieves the EWS::Client::Folder object which allows retrieval of
+    mailbox folder entries and their sizes. See that linked manual page for
+    more details.
 
 KNOWN ISSUES
     *   No handling of time zone information, sorry.

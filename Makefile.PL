@@ -27,6 +27,7 @@ my %WriteMakefileArgs = (
   'PREREQ_PM' => {
     'Authen::NTLM' => '0',
     'Carp' => '0',
+    'Data::Dumper' => '0',
     'DateTime' => '0',
     'DateTime::Format::ISO8601' => '0',
     'Encode' => '0',
@@ -34,6 +35,7 @@ my %WriteMakefileArgs = (
     'HTML::Strip' => '0',
     'LWP::Authen::Ntlm' => '0',
     'LWP::Protocol::https' => '6.02',
+    'Log::Report' => '0',
     'Moose' => '0',
     'Moose::Role' => '0',
     'Moose::Util::TypeConstraints' => '0',
@@ -43,7 +45,7 @@ my %WriteMakefileArgs = (
     'XML::Compile::Transport::SOAPHTTP' => '0',
     'XML::Compile::WSDL11' => '0'
   },
-  'VERSION' => '1.130570',
+  'VERSION' => '1.131710_001',
   'test' => {
     'TESTS' => 't/*.t'
   }

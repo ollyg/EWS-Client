@@ -1,6 +1,6 @@
 package EWS::Calendar::Role::RetrieveWithinWindow;
 BEGIN {
-  $EWS::Calendar::Role::RetrieveWithinWindow::VERSION = '1.130570';
+  $EWS::Calendar::Role::RetrieveWithinWindow::VERSION = '1.131710_001';
 }
 use Moose::Role;
 
@@ -15,11 +15,13 @@ sub _list_messages {
 }
 
 sub _check_for_errors {
-    my ($self, $kind, $response) = @_;
+    my ($self, $kind, $response, $opts) = @_;
 
+    croak "Fault returned from Exchange Server: ($opts->{impersonate}) $response->{Fault}->{faultstring}\n"
+        if ( exists $response->{Fault} );
     foreach my $msg ( $self->_list_messages($kind, $response) ) {
         my $code = $msg->{"${kind}ResponseMessage"}->{ResponseCode} || '';
-        croak "Fault returned from Exchange Server: $code\n"
+        croak "Fault returned from Exchange Server: ($opts->{impersonate}) $code\n"
             if $code ne 'NoError';
     }
 }
@@ -69,7 +71,7 @@ sub retrieve_within_window {
         },
     );
 
-    $self->_check_for_errors('FindItem', $find_response);
+    $self->_check_for_errors('FindItem', $find_response, $opts);
 
     my @ids = map { $_->{ItemId}->{Id} }
                   $self->_list_calendaritems('FindItem', $find_response);
@@ -110,6 +112,10 @@ sub retrieve_within_window {
                         calendar:LegacyFreeBusyStatus
                         item:IsDraft
                         item:Body
+                        calendar:OptionalAttendees
+                        calendar:RequiredAttendees
+                        calendar:Duration
+                        calendar:UID
                     /,
                 ],
             },
@@ -123,7 +129,7 @@ sub retrieve_within_window {
         },
     );
 
-    $self->_check_for_errors('GetItem', $get_response);
+    $self->_check_for_errors('GetItem', $get_response, $opts);
 
     return EWS::Calendar::ResultSet->new({
         items => [ $self->_list_calendaritems('GetItem', $get_response) ]
