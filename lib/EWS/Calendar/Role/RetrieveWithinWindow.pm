@@ -61,6 +61,11 @@ sub retrieve_within_window {
                 {
                     DistinguishedFolderId => {
                         Id => "calendar",
+                        (exists $opts->{email} ? (
+                            Mailbox => {
+                                EmailAddress => $opts->{email},
+                            },
+                        ) : ()), # optional
                     },
                 },
             ],
