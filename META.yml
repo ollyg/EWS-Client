@@ -38,4 +38,4 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=EWS-Client
   homepage: https://github.com/ollyg/EWS-Client/wiki
   repository: git://github.com/ollyg/EWS-Client.git
-version: 1.131710_001
+version: 1.141040

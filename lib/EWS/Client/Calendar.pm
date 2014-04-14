@@ -1,6 +1,6 @@
 package EWS::Client::Calendar;
 BEGIN {
-  $EWS::Client::Calendar::VERSION = '1.131710_001';
+  $EWS::Client::Calendar::VERSION = '1.141040';
 }
 use Moose;
 
@@ -30,7 +30,7 @@ EWS::Client::Calendar - Calendar Entries from Microsoft Exchange Server
 
 =head1 VERSION
 
-version 1.131710_001
+version 1.141040
 
 =head1 SYNOPSIS
 
@@ -107,6 +107,16 @@ returned results.
 
 Entries with a start date before this timestamp will be included in the
 results.
+
+=item C<email> => String (optional)
+
+Passing the primary SMTP address of another account will retrieve the contacts
+for that Exchange user instead using the I<Delegation> feature, assuming you
+have rights to see their contacts (i.e. the user has shared their contacts).
+If you do not have rights, an error will be thrown.
+
+If you pass one of the account's secondary SMTP addresses this module
+I<should> be able to divine the primary SMTP address required.
 
 =item C<impersonate> => String (optional)
 
@@ -337,7 +347,7 @@ Oliver Gorwits <oliver@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by University of Oxford.
+This software is copyright (c) 2014 by University of Oxford.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

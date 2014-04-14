@@ -1,6 +1,6 @@
 package EWS::Folder::Item;
 BEGIN {
-  $EWS::Folder::Item::VERSION = '1.131710_001';
+  $EWS::Folder::Item::VERSION = '1.141040';
 }
 
 use Moose;

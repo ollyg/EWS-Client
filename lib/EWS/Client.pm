@@ -1,6 +1,6 @@
 package EWS::Client;
 BEGIN {
-  $EWS::Client::VERSION = '1.131710_001';
+  $EWS::Client::VERSION = '1.141040';
 }
 BEGIN {
   $EWS::Client::VERSION = '1.130570';
@@ -119,7 +119,7 @@ EWS::Client - Microsoft Exchange Web Services Client
 
 =head1 VERSION
 
-version 1.131710_001
+version 1.141040
 
 =head1 SYNOPSIS
 
@@ -253,7 +253,7 @@ Oliver Gorwits <oliver@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by University of Oxford.
+This software is copyright (c) 2014 by University of Oxford.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

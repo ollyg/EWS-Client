@@ -1,6 +1,6 @@
 package EWS::Folder::ResultSet;
 BEGIN {
-  $EWS::Folder::ResultSet::VERSION = '1.131710_001';
+  $EWS::Folder::ResultSet::VERSION = '1.141040';
 }
 
 use Moose;

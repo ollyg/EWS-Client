@@ -1,6 +1,6 @@
 package EWS::Client::Role::GetFolder;
 BEGIN {
-  $EWS::Client::Role::GetFolder::VERSION = '1.131710_001';
+  $EWS::Client::Role::GetFolder::VERSION = '1.141040';
 }
 
 use Moose::Role;

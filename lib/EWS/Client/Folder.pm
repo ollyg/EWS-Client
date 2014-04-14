@@ -1,6 +1,6 @@
 package EWS::Client::Folder;
 BEGIN {
-  $EWS::Client::Folder::VERSION = '1.131710_001';
+  $EWS::Client::Folder::VERSION = '1.141040';
 }
 
 use Moose;
@@ -31,7 +31,7 @@ EWS::Client::Folder - Folder Entries from Microsoft Exchange Server
 
 =head1 VERSION
 
-version 1.131710_001
+version 1.141040
 
 =head1 DESCRIPTION
 
@@ -70,7 +70,7 @@ Oliver Gorwits <oliver@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by University of Oxford.
+This software is copyright (c) 2014 by University of Oxford.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -49,7 +49,7 @@
          }
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=EWS-Client"
@@ -61,6 +61,6 @@
          "web" : "https://github.com/ollyg/EWS-Client"
       }
    },
-   "version" : "1.131710_001"
+   "version" : "1.141040"
 }
 

@@ -1,6 +1,6 @@
 package EWS::Calendar::ResultSet;
 BEGIN {
-  $EWS::Calendar::ResultSet::VERSION = '1.131710_001';
+  $EWS::Calendar::ResultSet::VERSION = '1.141040';
 }
 use Moose;
 use MooseX::Iterator;

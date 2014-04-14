@@ -1,6 +1,6 @@
 package EWS::Calendar::Mailbox;
 BEGIN {
-  $EWS::Calendar::Mailbox::VERSION = '1.131710_001';
+  $EWS::Calendar::Mailbox::VERSION = '1.141040';
 }
 
 use Moose;

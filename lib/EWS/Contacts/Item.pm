@@ -1,6 +1,6 @@
 package EWS::Contacts::Item;
 BEGIN {
-  $EWS::Contacts::Item::VERSION = '1.131710_001';
+  $EWS::Contacts::Item::VERSION = '1.141040';
 }
 use Moose;
 

@@ -1,6 +1,6 @@
 package EWS::Calendar::Role::RetrieveWithinWindow;
 BEGIN {
-  $EWS::Calendar::Role::RetrieveWithinWindow::VERSION = '1.131710_001';
+  $EWS::Calendar::Role::RetrieveWithinWindow::VERSION = '1.141040';
 }
 use Moose::Role;
 
@@ -58,8 +58,8 @@ sub retrieve_within_window {
         },
         ParentFolderIds => {
             cho_FolderId => [
-                {
-                    DistinguishedFolderId => {
+                { DistinguishedFolderId =>
+                    {
                         Id => "calendar",
                         (exists $opts->{email} ? (
                             Mailbox => {
