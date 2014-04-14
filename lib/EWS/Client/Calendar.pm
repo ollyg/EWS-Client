@@ -93,6 +93,16 @@ returned results.
 Entries with a start date before this timestamp will be included in the
 results.
 
+=item C<email> => String (optional)
+
+Passing the primary SMTP address of another account will retrieve the contacts
+for that Exchange user instead using the I<Delegation> feature, assuming you
+have rights to see their contacts (i.e. the user has shared their contacts).
+If you do not have rights, an error will be thrown.
+
+If you pass one of the account's secondary SMTP addresses this module
+I<should> be able to divine the primary SMTP address required.
+
 =item C<impersonate> => String (optional)
 
 Passing the primary SMTP address of another account will retrieve the entries
