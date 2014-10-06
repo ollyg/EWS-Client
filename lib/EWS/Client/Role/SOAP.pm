@@ -67,7 +67,17 @@ sub _build_wsdl {
 
     # skip the t:Culture element in the ResolveNames response
     # it breaks the XML Parser for some reason
-    $wsdl->addHook(path => "{http://schemas.microsoft.com/exchange/services/2006/messages}ResolveNamesResponse/ResponseMessages/ResolveNamesResponseMessage/ResolutionSet/Resolution/Contact", replace => 'SKIP');
+    $wsdl->addHook(path => "{http://schemas.microsoft.com/exchange/services/2006/messages}ResolveNamesResponse/ResponseMessages/ResolveNamesResponseMessage/ResolutionSet/Resolution/Contact",
+        before => sub {
+            my ($xml, $path) = @_;
+            my @nodes = $xml->childNodes();
+            foreach my $node (@nodes) {
+                if($node->nodeName eq 't:Culture'){
+                    $xml->removeChild($node);
+                }
+            }
+            return $xml;
+         });
 
     return $wsdl;
 }
