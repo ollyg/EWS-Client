@@ -12,6 +12,7 @@ with qw/
     EWS::Client::Role::GetFolder
     EWS::Client::Role::ExpandDL
     EWS::Client::Role::GetUserAvailability
+    EWS::Client::Role::ResolveNames
 /;
 use EWS::Client::Contacts;
 use EWS::Client::Calendar;

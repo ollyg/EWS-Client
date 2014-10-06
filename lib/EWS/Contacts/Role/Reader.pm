@@ -91,5 +91,26 @@ sub retrieve {
     });
 }
 
+sub _get_resolvenames {
+    my ($self, $opts) = @_;
+
+    print "calling\n";
+    use Data::Dumper;
+    print Dumper( scalar $self->client->ResolveNames->(
+        (exists $opts->{impersonate} ? (
+            Impersonation => {
+                ConnectingSID => {
+                    PrimarySmtpAddress => $opts->{impersonate},
+                }
+            },
+        ) : ()),
+        RequestVersion => {
+            Version => $self->client->server_version,
+        },
+        ReturnFullContactData => 'true',
+        UnresolvedEntry => $opts->{unresolved_entry}
+    ));
+}
+
 no Moose::Role;
 1;

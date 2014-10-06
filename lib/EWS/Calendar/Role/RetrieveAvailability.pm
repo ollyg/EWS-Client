@@ -9,7 +9,7 @@ sub retrieve_availability {
 
     # GetUserAvailability docs:
     # http://msdn.microsoft.com/en-us/library/office/aa564001%28v=exchg.140%29.aspx
-    my $response = scalar $self->client->GetUserAvailability->(
+    my ($response, $trace) = $self->client->GetUserAvailability->(
         TimeZone => {
             Bias => 0,
             StandardTime => {
@@ -45,6 +45,10 @@ sub retrieve_availability {
             MergedFreeBusyIntervalInMinutes => 15,
         },
     );
+
+    use Data::Dumper;
+    print Dumper($trace);
+    print Dumper($response);
 
     if($response->{GetUserAvailabilityResult}
                 ->{FreeBusyResponseArray}
