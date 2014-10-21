@@ -13,10 +13,12 @@ with qw/
     EWS::Client::Role::FindItem
     EWS::Client::Role::FindFolder
     EWS::Client::Role::GetFolder
+    EWS::Client::Role::ExpandDL
 /;
 use EWS::Client::Contacts;
 use EWS::Client::Calendar;
 use EWS::Client::Folder;
+use EWS::Client::DistributionList;
 use URI::Escape ();
 use Log::Report;
 
@@ -71,6 +73,16 @@ sub _build_folders {
     return EWS::Client::Folder->new({ client => $self });
 }
 
+has distribution_list => (
+    is => 'ro',
+    isa => 'EWS::Client::DistributionList',
+    lazy_build => 1,
+);
+
+sub _build_distribution_list {
+    my $self = shift;
+    return EWS::Client::DistributionList->new({ client => $self });
+}
 
 sub BUILDARGS {
     my ($class, @rest) = @_;
@@ -127,7 +139,7 @@ Set up your Exchange Web Services client.
 
  use EWS::Client;
  use DateTime;
- 
+
  my $ews = EWS::Client->new({
      server      => 'exchangeserver.example.com',
      username    => 'oliver',
@@ -140,13 +152,13 @@ Then perform operations on the Exchange server:
      start => DateTime->now(),
      end   => DateTime->now->add( months => 1 ),
  });
- 
+
  print "I retrieved ". $entries->count ." items\n";
- 
+
  while ($entries->has_next) {
      print $entries->next->Subject, "\n";
  }
- 
+
  my $contacts = $ews->contacts->retrieve;
 
 =head1 DESCRIPTION
@@ -232,6 +244,12 @@ Retrieves the L<EWS::Client::Folder> object which allows retrieval of
 mailbox folder entries and their sizes. See that linked manual page for
 more details.
 
+=head2 $ews->dls()
+
+Retrieves the L<EWS::Client::DistributionList> object which allows retrieval of
+distribution list entries and their email addresses and names. See that linked
+manual page for more details.
+
 =head1 KNOWN ISSUES
 
 =over 4
@@ -259,4 +277,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
