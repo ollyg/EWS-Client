@@ -62,7 +62,7 @@ sub retrieve {
     $self->_check_for_errors( 'ExpandDL', $get_response );
 
     return EWS::DistributionList::ResultSet->new(
-        { items => [ $self->_list_dlitems( 'ExpandDL', $get_response ) ] } );
+        { mailboxes => [ $self->_list_dlitems( 'ExpandDL', $get_response ) ] } );
 }
 
 sub expand {

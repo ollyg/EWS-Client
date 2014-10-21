@@ -25,7 +25,7 @@ sub BUILDARGS {
 
 sub count {
     my $self = shift;
-    return scalar @{ $self->items };
+    return scalar @{ $self->mailboxes };
 }
 
 has iterator => (
