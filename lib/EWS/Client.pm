@@ -1,7 +1,4 @@
 package EWS::Client;
-BEGIN {
-  $EWS::Client::VERSION = '1.130570';
-}
 use Moose;
 
 with qw/
@@ -10,10 +7,12 @@ with qw/
     EWS::Client::Role::FindItem
     EWS::Client::Role::FindFolder
     EWS::Client::Role::GetFolder
+    EWS::Client::Role::ExpandDL
 /;
 use EWS::Client::Contacts;
 use EWS::Client::Calendar;
 use EWS::Client::Folder;
+use EWS::Client::DistributionList;
 use URI::Escape ();
 use Log::Report;
 
@@ -68,6 +67,16 @@ sub _build_folders {
     return EWS::Client::Folder->new({ client => $self });
 }
 
+has distribution_list => (
+    is => 'ro',
+    isa => 'EWS::Client::DistributionList',
+    lazy_build => 1,
+);
+
+sub _build_distribution_list {
+    my $self = shift;
+    return EWS::Client::DistributionList->new({ client => $self });
+}
 
 sub BUILDARGS {
     my ($class, @rest) = @_;
@@ -216,6 +225,12 @@ more details.
 Retrieves the L<EWS::Client::Folder> object which allows retrieval of
 mailbox folder entries and their sizes. See that linked manual page for
 more details.
+
+=head2 $ews->dls()
+
+Retrieves the L<EWS::Client::DistributionList> object which allows retrieval of
+distribution list entries and their email addresses and names. See that linked
+manual page for more details.
 
 =head1 KNOWN ISSUES
 
