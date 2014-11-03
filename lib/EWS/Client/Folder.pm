@@ -1,6 +1,6 @@
 package EWS::Client::Folder;
 BEGIN {
-  $EWS::Client::Folder::VERSION = '1.141040';
+  $EWS::Client::Folder::VERSION = '1.143070';
 }
 
 use Moose;
@@ -31,7 +31,7 @@ EWS::Client::Folder - Folder Entries from Microsoft Exchange Server
 
 =head1 VERSION
 
-version 1.141040
+version 1.143070
 
 =head1 DESCRIPTION
 

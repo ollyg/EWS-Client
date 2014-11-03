@@ -1,6 +1,6 @@
 package EWS::Folder::Role::Reader;
 BEGIN {
-  $EWS::Folder::Role::Reader::VERSION = '1.141040';
+  $EWS::Folder::Role::Reader::VERSION = '1.143070';
 }
 
 use Moose::Role;

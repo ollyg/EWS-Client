@@ -15,7 +15,9 @@ lib/EWS/Calendar/Window.pm
 lib/EWS/Client.pm
 lib/EWS/Client/Calendar.pm
 lib/EWS/Client/Contacts.pm
+lib/EWS/Client/DistributionList.pm
 lib/EWS/Client/Folder.pm
+lib/EWS/Client/Role/ExpandDL.pm
 lib/EWS/Client/Role/FindFolder.pm
 lib/EWS/Client/Role/FindItem.pm
 lib/EWS/Client/Role/GetFolder.pm
@@ -24,6 +26,9 @@ lib/EWS/Client/Role/SOAP.pm
 lib/EWS/Contacts/Item.pm
 lib/EWS/Contacts/ResultSet.pm
 lib/EWS/Contacts/Role/Reader.pm
+lib/EWS/DistributionList/Mailbox.pm
+lib/EWS/DistributionList/ResultSet.pm
+lib/EWS/DistributionList/Role/Reader.pm
 lib/EWS/Folder/Item.pm
 lib/EWS/Folder/ResultSet.pm
 lib/EWS/Folder/Role/Reader.pm

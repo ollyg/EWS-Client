@@ -1,6 +1,6 @@
 package EWS::Calendar::Role::Reader;
 BEGIN {
-  $EWS::Calendar::Role::Reader::VERSION = '1.141040';
+  $EWS::Calendar::Role::Reader::VERSION = '1.143070';
 }
 use Moose::Role;
 

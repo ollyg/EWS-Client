@@ -2,7 +2,7 @@ NAME
     EWS::Client - Microsoft Exchange Web Services Client
 
 VERSION
-    version 1.141040
+    version 1.143070
 
 SYNOPSIS
     Set up your Exchange Web Services client.
@@ -103,6 +103,11 @@ METHODS
     Retrieves the EWS::Client::Folder object which allows retrieval of
     mailbox folder entries and their sizes. See that linked manual page for
     more details.
+
+  $ews->dls()
+    Retrieves the EWS::Client::DistributionList object which allows
+    retrieval of distribution list entries and their email addresses and
+    names. See that linked manual page for more details.
 
 KNOWN ISSUES
     *   No handling of time zone information, sorry.

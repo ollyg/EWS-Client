@@ -1,6 +1,6 @@
 package EWS::Client::Role::FindFolder;
 BEGIN {
-  $EWS::Client::Role::FindFolder::VERSION = '1.141040';
+  $EWS::Client::Role::FindFolder::VERSION = '1.143070';
 }
 
 use Moose::Role;

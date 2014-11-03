@@ -1,6 +1,6 @@
 package EWS::Contacts::Role::Reader;
 BEGIN {
-  $EWS::Contacts::Role::Reader::VERSION = '1.141040';
+  $EWS::Contacts::Role::Reader::VERSION = '1.143070';
 }
 use Moose::Role;
 
