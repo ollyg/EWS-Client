@@ -49,7 +49,7 @@ Then perform operations on the calendar entries:
 
  my $entries = $ews->calendar->retrieve({
      start => DateTime->now(),
-     end   => DateTime->now->add( month => 1 ),
+     end   => DateTime->now->add( months => 1 ),
  });
  
  print "I retrieved ". $entries->count ." items\n";
