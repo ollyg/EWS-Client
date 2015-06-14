@@ -1,5 +1,10 @@
 #!/usr/bin/perl
 
+use Test::File::ShareDir -share => {
+  -dist   => { 'EWS-Client'  => 'share' }
+};
+
+use lib './lib';
 use EWS::Client;
 use DateTime;
 

@@ -1,6 +1,7 @@
 1.200001  2015-06-14
 
   * Fix typo in POD (T. Hubbard)
+  * Fix error when no results are retrieved (due to failed connection)
 
 1.200000  2015-06-14
 

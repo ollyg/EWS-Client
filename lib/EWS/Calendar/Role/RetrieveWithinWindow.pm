@@ -76,12 +76,15 @@ sub retrieve_within_window {
         },
     );
 
+    return EWS::Calendar::ResultSet->new({items => []})
+        if !defined $find_response;
+
     $self->_check_for_errors('FindItem', $find_response, $opts);
 
     my @ids = map { $_->{ItemId}->{Id} }
                   $self->_list_calendaritems('FindItem', $find_response);
 
-    return return EWS::Calendar::ResultSet->new({items => []})
+    return EWS::Calendar::ResultSet->new({items => []})
         if scalar @ids == 0;
 
     my $get_response = scalar $self->client->GetItem->(
