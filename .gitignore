@@ -1,0 +1,7 @@
+EWS-Client-*
+test.*
+*.swp
+*.pid
+MYMETA.*
+*.tar.gz
+*.komodo*

@@ -1,6 +1,6 @@
 package EWS::Client;
 BEGIN {
-  $EWS::Client::VERSION = '1.143070';
+  $EWS::Client::VERSION = '1.200000';
 }
 use Moose;
 
@@ -116,19 +116,9 @@ __PACKAGE__->meta->make_immutable;
 no Moose;
 1;
 
-# ABSTRACT: Microsoft Exchange Web Services Client
-
-
-__END__
-=pod
-
 =head1 NAME
 
 EWS::Client - Microsoft Exchange Web Services Client
-
-=head1 VERSION
-
-version 1.143070
 
 =head1 SYNOPSIS
 

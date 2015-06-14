@@ -2,13 +2,10 @@
 use strict;
 use warnings;
 
-
-
 use ExtUtils::MakeMaker 6.30;
 
 use File::ShareDir::Install;
 install_share dist => "share";
-
 
 my %WriteMakefileArgs = (
   'ABSTRACT' => 'Microsoft Exchange Web Services Client',
@@ -45,7 +42,7 @@ my %WriteMakefileArgs = (
     'XML::Compile::Transport::SOAPHTTP' => '0',
     'XML::Compile::WSDL11' => '0'
   },
-  'VERSION' => '1.143070',
+  'VERSION' => '1.200000',
   'test' => {
     'TESTS' => 't/*.t'
   }
