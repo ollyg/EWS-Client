@@ -4,6 +4,7 @@ lib/EWS/Calendar/Item.pm
 lib/EWS/Calendar/Mailbox.pm
 lib/EWS/Calendar/ResultSet.pm
 lib/EWS/Calendar/Role/Reader.pm
+lib/EWS/Calendar/Role/RetrieveAvailability.pm
 lib/EWS/Calendar/Role/RetrieveWithinWindow.pm
 lib/EWS/Calendar/Window.pm
 lib/EWS/Client.pm
@@ -16,6 +17,8 @@ lib/EWS/Client/Role/FindFolder.pm
 lib/EWS/Client/Role/FindItem.pm
 lib/EWS/Client/Role/GetFolder.pm
 lib/EWS/Client/Role/GetItem.pm
+lib/EWS/Client/Role/GetUserAvailability.pm
+lib/EWS/Client/Role/ResolveNames.pm
 lib/EWS/Client/Role/SOAP.pm
 lib/EWS/Contacts/Item.pm
 lib/EWS/Contacts/ResultSet.pm

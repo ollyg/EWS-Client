@@ -1,6 +1,6 @@
 package EWS::Client;
 BEGIN {
-  $EWS::Client::VERSION = '1.200001';
+  $EWS::Client::VERSION = '1.300000';
 }
 use Moose;
 
