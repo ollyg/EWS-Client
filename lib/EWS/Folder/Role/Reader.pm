@@ -6,7 +6,6 @@ BEGIN {
 use Moose::Role;
 use EWS::Folder::ResultSet;
 use Carp;
-use Data::Dumper;
 
 sub _list_messages {
     my ($self, $kind, $response) = @_;

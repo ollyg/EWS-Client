@@ -46,10 +46,6 @@ sub retrieve_availability {
         },
     );
 
-    use Data::Dumper;
-    print Dumper($trace);
-    print Dumper($response);
-
     if($response->{GetUserAvailabilityResult}
                 ->{FreeBusyResponseArray}
                 ->{FreeBusyResponse}->[0]

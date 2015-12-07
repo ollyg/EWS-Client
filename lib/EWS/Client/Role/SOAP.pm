@@ -46,6 +46,7 @@ sub _build_transporter {
             $self->username, $self->password);
     }
 
+    # XXX disable all security checks
     $t->userAgent->ssl_opts( verify_hostname => 0, SSL_verify_mode => 0x00 );
 
     return $t;
