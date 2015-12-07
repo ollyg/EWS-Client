@@ -84,64 +84,67 @@ sub retrieve_within_window {
     my @ids = map { $_->{ItemId}->{Id} }
                   $self->_list_calendaritems('FindItem', $find_response);
 
-    return EWS::Calendar::ResultSet->new({items => []})
-        if scalar @ids == 0;
+    my @items;
 
-    my $get_response = scalar $self->client->GetItem->(
-        (exists $opts->{impersonate} ? (
-            Impersonation => {
-                ConnectingSID => {
-                    PrimarySmtpAddress => $opts->{impersonate},
-                }
+    # Exchange (at least versions 2007,2010) have a limit of 250 items for a
+    # GetItem call. To be safe, we just pull 200 items at a time until we fetch
+    # everything
+    while (@ids) {
+        my $get_response = scalar $self->client->GetItem->(
+            (exists $opts->{impersonate} ? (
+                Impersonation => {
+                    ConnectingSID => {
+                        PrimarySmtpAddress => $opts->{impersonate},
+                    }
+                },
+            ) : ()),
+            RequestVersion => {
+                Version => $self->client->server_version,
             },
-        ) : ()),
-        RequestVersion => {
-            Version => $self->client->server_version,
-        },
-        ItemShape => {
-            BaseShape => 'IdOnly',
-            AdditionalProperties => {
-                cho_Path => [
+            ItemShape => {
+                BaseShape => 'IdOnly',
+                AdditionalProperties => {
+                    cho_Path => [
+                        map {{
+                            FieldURI => {
+                                FieldURI => $_, 
+                            },  
+                        }} qw/ 
+                            calendar:Start
+                            calendar:End
+                            item:Subject
+                            calendar:Location
+                            calendar:CalendarItemType
+                            calendar:Organizer
+                            item:Sensitivity
+                            item:DisplayTo
+                            calendar:AppointmentState
+                            calendar:IsAllDayEvent
+                            calendar:LegacyFreeBusyStatus
+                            item:IsDraft
+                            item:Body
+                            calendar:OptionalAttendees
+                            calendar:RequiredAttendees
+                            calendar:Duration
+                            calendar:UID
+                        /,
+                    ],
+                },
+            },
+            ItemIds => {
+                cho_ItemId => [
                     map {{
-                        FieldURI => {
-                            FieldURI => $_, 
-                        },  
-                    }} qw/ 
-                        calendar:Start
-                        calendar:End
-                        item:Subject
-                        calendar:Location
-                        calendar:CalendarItemType
-                        calendar:Organizer
-                        item:Sensitivity
-                        item:DisplayTo
-                        calendar:AppointmentState
-                        calendar:IsAllDayEvent
-                        calendar:LegacyFreeBusyStatus
-                        item:IsDraft
-                        item:Body
-                        calendar:OptionalAttendees
-                        calendar:RequiredAttendees
-                        calendar:Duration
-                        calendar:UID
-                    /,
+                        ItemId => { Id => $_ },
+                    }} splice(@ids, 0, 200)
                 ],
             },
-        },
-        ItemIds => {
-            cho_ItemId => [
-                map {{
-                    ItemId => { Id => $_ },
-                }} @ids
-            ],
-        },
-    );
+        );
 
-    $self->_check_for_errors('GetItem', $get_response, $opts);
+        $self->_check_for_errors('GetItem', $get_response, $opts);
+        push(@items, $self->_list_calendaritems('GetItem', $get_response));
+    }
 
-    return EWS::Calendar::ResultSet->new({
-        items => [ $self->_list_calendaritems('GetItem', $get_response) ]
-    });
+    return EWS::Calendar::ResultSet->new({ items => [ @items ] });
 }
 
 no Moose::Role;
