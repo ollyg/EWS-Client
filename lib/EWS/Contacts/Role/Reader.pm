@@ -27,12 +27,22 @@ sub _check_for_errors {
 sub _list_contactitems {
     my ($self, $kind, $response) = @_;
 
-    return map  { $_->{Contact} }
-           grep { defined $_->{'Contact'}->{'DisplayName'} and length $_->{'Contact'}->{'DisplayName'} }
-           map  { @{ $_->{Items}->{cho_Item} || [] } }
-           map  { exists $_->{RootFolder} ? $_->{RootFolder} : $_ } 
-           map  { $_->{"${kind}ResponseMessage"} }
-                $self->_list_messages($kind, $response);
+    if($kind eq 'ResolveNames'){
+        return map { $_->{Contact} }
+               grep { defined $_->{'Contact'}->{'DisplayName'} and length $_->{'Contact'}->{'DisplayName'} }
+               map { @{ $_->{Resolution} } }
+               map { $_->{ResolutionSet} }
+               map { $_->{ResolveNamesResponseMessage} }
+                   $self->_list_messages($kind, $response);
+    }
+    else {
+        return map  { $_->{Contact} }
+               grep { defined $_->{'Contact'}->{'DisplayName'} and length $_->{'Contact'}->{'DisplayName'} }
+               map  { @{ $_->{Items}->{cho_Item} || [] } }
+               map  { exists $_->{RootFolder} ? $_->{RootFolder} : $_ } 
+               map  { $_->{"${kind}ResponseMessage"} }
+                    $self->_list_messages($kind, $response);
+    }
 }
 
 sub _get_contacts {
@@ -88,6 +98,35 @@ sub retrieve {
 
     return EWS::Contacts::ResultSet->new({
         items => [ $self->_list_contactitems('FindItem', $get_response) ]
+    });
+}
+
+sub _get_resolvenames {
+    my ($self, $opts) = @_;
+
+    return scalar $self->client->ResolveNames->(
+        (exists $opts->{impersonate} ? (
+            Impersonation => {
+                ConnectingSID => {
+                    PrimarySmtpAddress => $opts->{impersonate},
+                }
+            },
+        ) : ()),
+        RequestVersion => {
+            Version => $self->client->server_version,
+        },
+        ReturnFullContactData => 'true',
+        UnresolvedEntry => $opts->{unresolved_entry}
+    );
+}
+
+sub retrieve_gal {
+    my ($self, $opts) = @_;
+
+    my $get_response = $self->_get_resolvenames($opts);
+
+    return EWS::Contacts::ResultSet->new({
+            items => [ $self->_list_contactitems('ResolveNames', $get_response) ]
     });
 }
 

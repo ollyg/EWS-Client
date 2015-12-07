@@ -46,6 +46,8 @@ sub _build_transporter {
             $self->username, $self->password);
     }
 
+    $t->userAgent->ssl_opts( verify_hostname => 0, SSL_verify_mode => 0x00 );
+
     return $t;
 }
 
@@ -62,6 +64,20 @@ sub _build_wsdl {
     my $wsdl = XML::Compile::WSDL11->new('ews-services.wsdl');
     $wsdl->importDefinitions('ews-types.xsd');
     $wsdl->importDefinitions('ews-messages.xsd');
+
+    # skip the t:Culture element in the ResolveNames response
+    # it breaks the XML Parser for some reason
+    $wsdl->addHook(path => "{http://schemas.microsoft.com/exchange/services/2006/messages}ResolveNamesResponse/ResponseMessages/ResolveNamesResponseMessage/ResolutionSet/Resolution/Contact",
+        before => sub {
+            my ($xml, $path) = @_;
+            my @nodes = $xml->childNodes();
+            foreach my $node (@nodes) {
+                if($node->nodeName eq 't:Culture'){
+                    $xml->removeChild($node);
+                }
+            }
+            return $xml;
+         });
 
     return $wsdl;
 }
